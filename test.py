@@ -8,7 +8,12 @@
 #         print('Но вам не хватило баллов для стипендии')
 # else:
 #     print('К сожалению, вы не поступили')
-number = int(input('Число: '))
-summ = number / 2 
-summ // summ
-print(summ)
+num = int(input('Введите число: '))
+start_num = 0
+while start_num <= num:
+    result = start_num ** 3
+    print(result)
+    start_num += 1
+#print(num)
+
+
