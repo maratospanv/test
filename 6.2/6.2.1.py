@@ -1,6 +1,6 @@
 number = int(input('Введите число: '))
 while number > 0:
-    number2 = int(input('Введите второе число: '))
-    number2 += number
-    print(number2)
+ number = int(input('Введите 2е число: '))
+ number += number
+ print(number)
 print(number)
