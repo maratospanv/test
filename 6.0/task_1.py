@@ -1,6 +1,6 @@
 num = int(input('Введите число: '))
-start_num = 1
-while start_num <= num:
-    result = start_num ** 3
+while num > 0:
+    last_num = num % 10
+    result = last_num ** 3
     print(result)
-    start_num += 1
+    num //= 10
