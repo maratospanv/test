@@ -1,3 +1,4 @@
+#test
 print('Начался восьмичасовой рабочий день.')
 completed_task = 0
 time = 0
