@@ -1,22 +1,25 @@
-
+search_number = int(input('Загадайте число: '))
+number = 50
+#attempts = 0
+answer = 0
 while True:
-    number = int(input('Введите число: '))
-    attempts = 0
     if (number >= 1) or (number <= 100):
-        #hint = 0
-        #attempts += 1
-        #print(number)
         inp = ('Твое число равно, меньше или больше, чем число '+ str(number)+'? ')
         hint = int(input(inp))
         if hint == 1:
-            print('равно')
+            answer = search_number
+            print('равно', answer)
             break
         if hint == 2:
-            print('больше')
+            answer = answer + (answer / 2)
+            print('больше', answer)
+            number = int(answer)
         if hint == 3:
-            print('меньше')
-        if attempts > 6:
-            break
+            answer = int(number / 2)
+            print('меньше', answer)
+            number = int(answer)
+#        if attempts > 6:
+#            print('Выполнено 7 попыток подбора')
+#            break
     #else:
 #print('Число выходит за рамки')
-
