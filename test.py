@@ -1,3 +1,20 @@
+search_number = 7
+number_attempts = 0
+number = int(input('Введите число: '))
+number_attempts +=1
+while number != 7:
+    if number > search_number:
+        print('Число больше, чем нужно. Попробуйте ещё раз!')
+        number = int(input('Введите число: '))
+        number_attempts +=1
+    if number < search_number:
+        print('Число меньше, чем нужно. Попробуйте ещё раз!')
+        number = int(input('Введите число: '))
+        number_attempts +=1
+print('Вы угадали! Число попыток:', number_attempts)
+
+
+
 # place_on_list = int(input('Введите место в списке поступающих: '))
 # number_of_points = int(input('Введите количество баллов за экзамены: '))
 # if place_on_list <= 10:
@@ -58,17 +75,17 @@
 #     number //= 10
 # print('Сумма', summ)
 
-numbers = int(input("Введите число: "))
-summ_of_numbers = 0
-while numbers != 0:
-    last_number = numbers % 10
-    if last_number == 5:
-        print("Обнаружен разрыв")
-        break
-    summ_of_numbers += last_number
-    numbers //= 10
+# numbers = int(input("Введите число: "))
+# summ_of_numbers = 0
+# while numbers != 0:
+#     last_number = numbers % 10
+#     if last_number == 5:
+#         print("Обнаружен разрыв")
+#         break
+#     summ_of_numbers += last_number
+#     numbers //= 10
 
-print(summ_of_numbers)
+# print(summ_of_numbers)
 
 # number = int(input('Введите число: '))
 # number = number // 10
