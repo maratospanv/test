@@ -1,18 +1,50 @@
-search_number = 7
-number_attempts = 0
-number = int(input('Введите число: '))
-number_attempts +=1
-while number != 7:
-    if number > search_number:
-        print('Число больше, чем нужно. Попробуйте ещё раз!')
-        number = int(input('Введите число: '))
-        number_attempts +=1
-    if number < search_number:
-        print('Число меньше, чем нужно. Попробуйте ещё раз!')
-        number = int(input('Введите число: '))
-        number_attempts +=1
-print('Вы угадали! Число попыток:', number_attempts)
+search_number = int(input('Введите число: '))
+attempt = 0
+hint = 0
+number = 50
+while True:
+    attempt = attempt + 1
+    if (search_number >= 1) or (search_number <= 100):
+        answer_message = 'Ваше число больше или меньше или равно', str(number)+' ? '
+        answer = int(input(answer_message))
+        if attempt > 7:
+            print('Количесво попыток исчерпано')
+            break
+        elif answer == 1:
+            print('Вы нашли загаданное число', search_number)
+            break
+        elif answer == 2:
+            print('Число больше числа', number)
+            #number = (int(number) * 2) - (number // 2)
+            number = number % 2
+            print(number)
+        elif answer == 3:
+            print('Число меньше числа', number)
+            number = number // 2
+            print(number)
 
+
+
+
+# search_number = int(input('Введите число: '))
+# number = 50
+# while True:
+#     #Ограничение диапазона поиска
+#     if (search_number >= 1) or (search_number <= 100):
+#         answer_message = 'Ваше число больше или меньше или равно', str(number)+' ? '
+#         answer = int(input(answer_message))
+#         if answer == 1:
+#             print('Вы угадали число', search_number, '!!!')
+#             break
+#         elif answer == 2:
+#             print('Число больше числа', number)
+#             number = number + (number/2)
+#             print(number)
+#         elif answer == 3:
+#             print('Число меньше числа', number)
+#             number = number // 2
+#             print(number)
+            
 
 
 # place_on_list = int(input('Введите место в списке поступающих: '))
