@@ -4,10 +4,9 @@ min = 1
 max = 100
 avarage = max // 2
 while True:
-    attempt = attempt + 1
+    attempt += 1
     if (search_number >= 1) or (search_number <= 100):
-        answer_message = 'Ваше число больше или меньше или равно', str(avarage)+' ? '
-        answer = int(input(answer_message))
+        answer = int(input('Ваше число больше или меньше или равно '+str(avarage)+' ? '))
         if attempt > 7:
             print('Количесво попыток исчерпано')
             break
