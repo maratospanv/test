@@ -1,6 +1,7 @@
 num = int(input('Введите число: '))
-while num > 0:
-    last_num = num % 10
-    result = last_num ** 3
+min = 0
+max = num
+while max > min:
+    min += 1
+    result = min ** 3
     print(result)
-    num //= 10
