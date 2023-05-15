@@ -1,28 +1,37 @@
-search_number = int(input('Введите искомое число: '))
-attempt = 0
-min = 1
-max = 100
-avarage = max // 2
-while True:
-    attempt = attempt + 1
-    if (search_number >= 1) or (search_number <= 100):
-        answer_message = 'Ваше число больше или меньше или равно', str(avarage)+' ? '
-        answer = int(input(answer_message))
-        if attempt > 7:
-            print('Количесво попыток исчерпано')
-            break
-        if answer == 1:
-            print('Вы нашли загаданное число', avarage)
-            print('Число попыток:', attempt)
-            break
-        if answer == 2:
-            #print('Число больше числа', avarage)
-            min = avarage
-            avarage = (max + avarage) // 2
-        if answer == 3:
-            #print('Число меньше числа', avarage)
-            max = avarage
-            avarage = (min + max) // 2
+number1 = int(input('Введите первое число: '))
+number2 = int(input('Введите второе число: '))
+
+numbers_sum = 0
+for number in range(number1,number2+1):
+    numbers_sum += number
+print('Сумма чисел от', number1, 'до', number2, 'равна', numbers_sum)
+
+
+# search_number = int(input('Введите искомое число: '))
+# attempt = 0
+# min = 1
+# max = 100
+# avarage = max // 2
+# while True:
+#     attempt = attempt + 1
+#     if (search_number >= 1) or (search_number <= 100):
+#         answer_message = 'Ваше число больше или меньше или равно', str(avarage)+' ? '
+#         answer = int(input(answer_message))
+#         if attempt > 7:
+#             print('Количесво попыток исчерпано')
+#             break
+#         if answer == 1:
+#             print('Вы нашли загаданное число', avarage)
+#             print('Число попыток:', attempt)
+#             break
+#         if answer == 2:
+#             #print('Число больше числа', avarage)
+#             min = avarage
+#             avarage = (max + avarage) // 2
+#         if answer == 3:
+#             #print('Число меньше числа', avarage)
+#             max = avarage
+#             avarage = (min + max) // 2
 
           
 
