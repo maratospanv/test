@@ -1,10 +1,22 @@
-number1 = int(input('Введите первое число: '))
-number2 = int(input('Введите второе число: '))
+i = 0 
+for num in range(1,100):
+    summ = 1 * num * 3 
+    if summ == 1*(num // 3) * 3:
+        print(num)
 
-numbers_sum = 0
-for number in range(number1,number2+1):
-    numbers_sum += number
-print('Сумма чисел от', number1, 'до', number2, 'равна', numbers_sum)
+# a = 15 // 3
+# b= 18 // 3
+# print(a)
+# print(b)
+         
+
+# number1 = int(input('Введите первое число: '))
+# number2 = int(input('Введите второе число: '))
+
+# numbers_sum = 0
+# for number in range(number1,number2+1):
+#     numbers_sum += number
+# print('Сумма чисел от', number1, 'до', number2, 'равна', numbers_sum)
 
 
 # search_number = int(input('Введите искомое число: '))
