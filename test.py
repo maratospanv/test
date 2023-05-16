@@ -1,11 +1,20 @@
-i = 0 
-for num in range(1,100):
-    summ = 1 * num * 3 
-    if summ == 1*(num // 3) * 3:
-        print(num)
+card_sum = int(input("Введите количество карточек:\n"))
+
+count_cards = (card_sum * (card_sum + 1)) // 2
+
+print(count_cards)
+ 
+
+
+
+# i = 0 
+# for num in range(1,100):
+#     summ = 1 * num * 3 
+#     if summ == 1*(num // 3) * 3:
+#         print(num)
 
 # a = 15 // 3
-# b= 18 // 3
+# b= 18 // 31
 # print(a)
 # print(b)
          
