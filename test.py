@@ -1,9 +1,33 @@
-card_sum = int(input("Введите количество карточек:\n"))
+boys = int(input('Введите кол-во мальчиков: '))
+girls = int(input('Введите кол-во девочек: '))
+result = ''
+if boys > 2 * girls or girls > 2 * boys:
+    print('Нет решения')
+elif boys > girls:
+    diff = boys - girls
+    for bg in range(girls - diff):
+        result += 'BG'
+    for bgb in range(diff):
+        result += 'BGB'
+else:
+    diff = girls - boys
+    for gb in range(boys - diff):
+        result += 'GB'
+    for gbg in range(diff):
+        result += 'GBG'
+print(result)
 
-count_cards = (card_sum * (card_sum + 1)) // 2
 
-print(count_cards)
- 
+# card_sum = int(input("Введите количество карточек: "))
+# count_cards = (card_sum * (card_sum + 1)) // 2
+# print(count_cards)
+
+# search_card = count_cards
+# for _ in range(card_sum - 1):
+#     search_card -= int(input('Введите номер карточки, которая у вас есть: '))
+
+# print(search_card)
+
 
 
 
