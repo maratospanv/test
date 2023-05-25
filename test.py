@@ -1,10 +1,41 @@
 
-password = input('Введите пароль: ')
-while password != str(235):
-    print('Не верный пароль')
-    password = input('Попробуйте еще раз: ')
-print('Пароль верный. Добро ожаловать!')
+text = 'предложение1 разделено хуйпоймичем и браблять'
+word = 0
+count = 0
 
+for letter in text:
+    if letter != '':
+        count += 1
+        if word < count:
+            word = count
+    else:
+        count = 0
+print(word)
+
+
+# text = 'предложение1 разделено хуйпоймичем и браблять'
+# count_word = 1 #сколько слов
+# count_symbols = 0 #кол-во символов в слове
+# count_symbols_max = 0
+# count_all_symbols = 0
+# for x in text:
+#     count_all_symbols += 1
+      
+# print(f"кол-во слов {count_word}")
+
+# for x in range(count_all_symbols):
+#     if text[x] == ' ':
+#         count_word +=1
+#         if count_symbols_max < count_symbols:
+#             count_symbols_max = count_symbols
+#         count_symbols = 0
+#     else:
+#         if text[x] != range(count_all_symbols):
+#             count_symbols+=1
+
+# if count_symbols_max < count_symbols:
+#     count_symbols_max = count_symbols
+# print(f"кол-во символов {count_symbols_max}")
 
 # boys = int(input('Введите кол-во мальчиков: '))
 # girls = int(input('Введите кол-во девочек: '))
