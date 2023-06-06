@@ -1,12 +1,11 @@
-inp_row = int(input('Количество строк: '))
-inp_col = int(input('Количество столбцов: '))
-count = 0
-for row in range(inp_row):
-    for col in range(inp_col):
-        if row == 0 and col == inp_col // 2:
-            count = col
-            print('#',end='')
-            count -= 2
-        else: 
-            print(' ', end='')
+# Запрашиваем у пользователя высоту пирамиды
+height = int(input("Введите высоту пирамиды: "))
+
+# Внешний цикл для итерации по строкам пирамиды
+for i in range(height):
+    # Внутренний цикл для рисования символов в каждой строке
+    for j in range(height - i - 1):
+        print(" ", end="")
+    for k in range(2 * i + 1):
+        print("#", end="")
     print()
