@@ -1,9 +1,12 @@
 numSeq = int(input('Введите количество чисел: '))
-for num in range(numSeq):
+print()
+count = 0
+for num in range(1, numSeq + 1):
     number = int(input('Введите число: '))
-    count = 0
-    for seq in range(num):
-        print (seq)
-        if seq  // 2 == 0:
+    for seq in range(2, num):
+        if num % seq == 0:
+            break
+        else:
             count += 1
-print('Простых чисел', count)
+print()
+print('Простых чисел в последовательности', count)
