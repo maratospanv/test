@@ -1,9 +1,10 @@
-end_number = int(input("Введите верхнюю границу диапазона: "))
+n = int(input('Введите количество уровней пирамиды: '))
+number = 1
 
-# Внешний цикл для итерации по строкам пирамиды
-current_number = 1
-for i in range(1, end_number + 1):
-    # Внутренний цикл для рисования цифр в каждой строке
-    for j in range(end_number - i):
-        print(" ", end="")
-     for k in
+for row in range(1, n+1):
+  print('\t' * (n - row), end = '')
+  for col in range(row):
+    print(number, end = '')
+    number += 2
+    print('\t' * 2, end = '')
+  print()
