@@ -1,10 +1,10 @@
-n = int(input('Введите количество уровней пирамиды: '))
-number = 1
+num = int(input('Введите количество уровней пирамиды: '))
+start_number = 1
 
-for row in range(1, n+1):
-  print('\t' * (n - row), end = '')
+for row in range(1, num+1):
+  print('\t' * (num - row), end = '')
   for col in range(row):
-    print(number, end = '')
-    number += 2
+    print(start_number, end = '')
+    start_number += 2
     print('\t' * 2, end = '')
   print()

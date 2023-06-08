@@ -1,15 +1,20 @@
 total_number = int(input("Введите кол-во цифр: "))
-max = 0
+max_sum = 0
+check_num = 0
+check_num2 = 0
 
-for i in range(total_number):
-    j = int(input('Введите число: '))
-    s = 0
+for num in range(total_number):
+    numbers = int(input('Введите число: '))
+    remainder = 0
+    check_num = numbers
 
-    while j > 0:
-        s += j % 10
-        j = j // 10
-    #print(s, j)
+    while numbers > 0:
+        remainder += numbers % 10
+        numbers = numbers // 10
+    
 
-    if max < s:
-        max = s
-print('Максималльная сумма чисел равна', max, 'для числа', j)
+    if max_sum < remainder:
+        max_sum = remainder
+        check_num2 = check_num
+        
+print('Максималльная сумма чисел равна', max_sum, 'для числа', check_num2)

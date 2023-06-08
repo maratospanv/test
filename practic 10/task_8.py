@@ -1,8 +1,8 @@
-n = int(input('Введите число: '))
+num = int(input('Введите число: '))
 print()
-q = n - 1
+q = num - 1
 while q >= 0:
-    for i in range(-n, n + 1):
+    for i in range(-num, num + 1):
         if abs(i) > q:
             print(abs(i), end='')
         elif i == 0:
