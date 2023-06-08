@@ -1,22 +1,23 @@
-# total_number = int(input("Введите кол-во цифр: "))
+total_number = int(input("Введите кол-во цифр: ")) 
+sum_rem = 0 
+amount = 0 
+this_number = 0 
+this_number_two = 0 
 
-# for numbers in range(total_number):
-#     number = int(input('Введите число: '))
+for num in range (1, total_number + 1) : 
+    print("Введите", num, "число") 
+    number = int(input()) 
+    this_number = number 
 
-#     for i in range(1,number + 1):
-#         j = int(input())
-total_number = int(input("Введите кол-во цифр: "))
-max = 0
+    while number > 0 : 
+        sum_rem += number % 10 
+        number //= 10 
 
-for i in range(total_number):
-    j = int(input('Введите число: '))
-    s = 0
-    while j > 0:
-        s += j % 10
-        j = j // 10
-    print(s)
-
-    if max < s:
-        max = s
-print('MAX', max)
-    
+    if sum_rem > amount : 
+        amount = sum_rem 
+        this_number_two = this_number 
+        sum_rem = 0 
+    else: 
+        sum_rem = 0 
+        
+print("Наибольшее по сумме цифр число", this_number_two, 'сумма', amount )
