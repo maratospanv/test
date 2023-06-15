@@ -1,24 +1,33 @@
 def summ(num):
-    num1 = (num // 10)
-    num2 = (num % 10)
-    num3 = num1 + num2
-    print(num3)
+    summ = 0
+    while num >= 1:
+        s = num % 10
+        num = num // 10
+        summ += s
+    print('Сумма чисел равна:', summ)
 
 def max(num):
-    num1 = (num // 10)
-    num2 = (num % 10)
-    if num1 > num2:
-        print('Число', num1, 'больше', num2)
+    max_num = 0
+    while num >= 1:
+        s = num % 10
+        num = num // 10
+        if s > max_num or max_num == 0:
+            max_num = s
+    print('Максимальное число:', max_num)
 
 def min(num):
-    num1 = (num // 10)
-    num2 = (num % 10)
-    if num1 < num2:
-        print('Число', num1, 'меньше', num2)
+    min_sum = 9  
+    while num >= 1:
+        s = num % 10
+        num = num // 10
+        if s < min_sum:
+            min_sum = s
+        #else:
+        #    break
+    print('Минимальное число:', min_sum)    
 
-def quest(question):
-    
-    question = int(input('суммировать числа (1) \nНайти максимальное число (2)  \nНайти минимальное число (3)'))
+def quest(question):    
+    question = int(input('Суммировать числа (1) \nНайти максимальное число (2)  \nНайти минимальное число (3) \n'))
     if question == 1:
         summ(input_num)
     elif question == 2:
@@ -28,7 +37,9 @@ def quest(question):
     else:
         quest()
 
-input_num = int(input('Введите число: '))
-quest(input_num)
+while True:
+    print()
+    input_num = int(input('Введите число: '))
+    quest(input_num)
         
 
