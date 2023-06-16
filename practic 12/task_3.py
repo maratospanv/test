@@ -43,5 +43,3 @@ while True:
     print()
     input_num = int(input('Введите число: '))
     quest(input_num)
-        
-
