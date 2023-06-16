@@ -27,13 +27,15 @@ def min(num):
     print('Минимальное число:', min_sum)    
 
 def quest(question):    
-    question = int(input('Суммировать числа (1) \nНайти максимальное число (2)  \nНайти минимальное число (3) \n'))
+    question = int(input('Суммировать числа (1) \nНайти максимальное число (2)  \nНайти минимальное число (3) \nВыход (0) \n'))
     if question == 1:
         summ(input_num)
     elif question == 2:
         max(input_num)
     elif question == 3:
         min(input_num)
+    elif question == 0:
+        return
     else:
         quest()
 
