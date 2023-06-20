@@ -1,20 +1,57 @@
+# def contrariwise(num):
+#     a = ''
+#     if num == 0:
+#         print('\nПрограмма завершена!')
+#     while num > -1:
+#         s = num % 10
+#         num //= 10
+#         if s != 0:
+#             a += str(s)
+#     return a
+
+# number = int(input('Введите первое число: '))
+# sum1_cont = contrariwise(number)
+
+# number2 = int(input('Введите второе число: '))
+# sum2_cont = contrariwise(number2)
+
+# print()
+
+# print('Первое число наоборот:', sum1_cont)
+# print('Второе число наоборот:', sum2_cont)
+
+# summ = int(sum1_cont) + int(sum2_cont)
+
+# print('Сумма:', summ)
+
+# print()
+
+# summ_cont = contrariwise(sum)
+# print('Сумма наоборот:', summ_cont)
+
 def contrariwise(num):
-    if num == 0:
-        print('\nПрограмма завершена!')
-    while num > 0:
-        s = num % 10
-        num //= 10
-        if s != 0:
-            print(int(s), end='')
+    a = ''
+    for i in range(1,len(num)+1):
+        a += num[-i]
+    return a
 
-number = int(input('Введите число: '))
-s1 = contrariwise(int(number))
+number1 = input('Введите первое число: ')
+number2 = input('Введите первое число: ')
+
+num_cont1 = (contrariwise(number1))
+num_cont2 = (contrariwise(number2))
 
 print()
 
-number2 = int(input('Введите число: '))
-s2 = contrariwise(int(number2))
+print('Первое число наоборот:', num_cont1)
+print('Второе число наоборот:', num_cont2)
+
+summ_cont = int(num_cont1) + int(num_cont2)
+
 print()
 
-print('Первое число наоборот: ', s1)
+print('Сумма:', summ_cont)
+
+print('Сумма наоборот:', contrariwise(str(summ_cont)))
+
 
