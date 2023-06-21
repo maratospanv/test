@@ -13,19 +13,16 @@ first_n = int(input("Введите первое число: "))
 second_n = int(input('Введите второе число: '))
 
 
-
-
-
 first_g = (contrariwise(first_n))
 second_g = (contrariwise(second_n))
-print(int(first_g))
-print(int(second_g))
+print('Первое число наоборот:', int(first_g))
+print('Второе число наоборот:', int(second_g))
 
 g_sum = int(first_g) + int(second_g)
 
-print(g_sum)
+print('Сумма:', g_sum)
 
-print(contrariwise(g_sum))
+print('Сумма наоборот:', contrariwise(g_sum))
 
 
 
