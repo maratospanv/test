@@ -1,0 +1,140 @@
+Добрый день!
+
+Задание 1
+
+marat@linux:~$ sudo chmod g+s /home/devops/
+
+marat@linux:~$ ls -l /home/
+
+total 12
+
+drwxrwsr-x 2 root  devops 4096 Jun 23 05:36 devops
+
+drwxr-x--- 8 marat marat  4096 Jun 23 05:36 marat
+
+drwxr-x--- 2 maria maria  4096 Jun 23 03:55 maria
+
+
+
+Используя sudo, создайте в ней один или несколько файлов от имени суперпользователя. Какая группа и какой пользователь будут владельцами файла?
+
+
+
+marat@linux:~$ sudo touch /home/devops/file1
+
+marat@linux:~$ ls -l /home/devops/file1
+
+-rw-r--r-- 1 root devops 0 Jun 23 05:38 /home/devops/file1
+
+
+
+Ответ - пользователь root, группа devops
+
+
+
+Создайте, также от имени суперпользователя, файл в своей домашней директории. Какая группа и какой пользователь будут владельцами в этом случае?
+
+
+
+marat@linux:~$ sudo touch file3
+
+marat@linux:~$ ls -l file3
+
+-rw-r--r-- 1 root root 0 Jun 23 05:41 file3
+
+
+
+Ответ - пользователь и группа root
+
+
+
+Почему в первом и втором случае мы получили разный результат?
+
+Ответ - в первом случает применен SGID, который присваивает группу владельца каталога, во втором же случае файл создан от имени пользователя root без применения SGID
+
+
+
+
+
+marat@linux:~$ sudo chmod +t /home/devops
+
+marat@linux:~$ ls -l /home/
+
+total 12
+
+drwxrwsr-t 2 root  devops 4096 Jun 23 05:38 devops
+
+drwxr-x--- 8 marat marat  4096 Jun 23 05:41 marat
+
+drwxr-x--- 2 maria maria  4096 Jun 23 03:55 maria
+
+
+
+marat@linux:~$ touch /home/devops/file4
+
+marat@linux:~$ sudo -u maria touch /home/devops/file5
+
+marat@linux:~$ ls -l /home/devops/
+
+total 0
+
+-rw-r--r-- 1 root  devops 0 Jun 23 05:38 file1
+
+-rw-rw-r-- 1 marat devops 0 Jun 23 05:49 file4
+
+-rw-rw-r-- 1 maria devops 0 Jun 23 05:49 file5
+
+
+
+Сможете ли вы удалить файл, созданный от имени нового пользователя, несмотря на то, что они оба принадлежат к группе, владеющей файлами в этой директории? Почему?
+
+Ответ - я не смогу удалить файл созданный другим пользователем, т.к. к каталогу применен sticky-bit, который подразумевает разрешения на удаление только пользователю создавший каталог/файл
+
+
+
+Задание 2
+
+marat@linux:~$ sudo -u maria bash
+
+maria@linux:/home/marat$ sudo touch file6
+
+[sudo] password for maria:
+
+Sorry, try again.
+
+[sudo] password for maria:
+
+Sorry, try again.
+
+[sudo] password for maria:
+
+sudo: 3 incorrect password attempts
+
+
+
+Ответ - пользователь maria не сможет выполнить комманды с использованием sudo, т.к. пользователь не состаит в группе sudo
+
+
+
+marat@linux:~$ sudo usermod -a -G sudo maria
+
+marat@linux:~$ cat /etc/group | grep sudo
+
+sudo:x:27:marat,maria
+
+
+
+Задание 3
+
+marat@linux:~$ sudo apt-get update
+
+[sudo] password for marat:
+
+Are you on drugs?
+
+[sudo] password for marat:
+
+It can only be attributed to human error.
+
+[sudo] password for marat:
+

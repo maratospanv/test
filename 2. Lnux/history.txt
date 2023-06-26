@@ -1,0 +1,194 @@
+ 1  ls /tmp/
+    2  sudo mkdir /task_2.4
+    3  sudo rmdir /task_2.4
+    4  mkdir task_2.4
+    5  ls
+    6  ls -la
+    7  chmod g-wx,o-x task_2.4/
+    8  ls -l
+    9  ls -a
+   10  chmod g-wx,o-x task_2.4/
+   11  ls -l
+   12  mkdir darkdir
+   13  ls -l
+   14  touch darkdir/file
+   15  chmod a-r+x darkdir
+   16  ls darkdir/
+   17  ls darkdir/file
+   18  sudo mkdir rootdir
+   19  sud chmod g-wx,o-wx rootdir
+   20  sudo chmod g-wx,o-wx rootdir
+   21  ls -l
+   22  touch rootdir/file
+   23  sudo touch rootdir/file
+   24  ls -l rootdir
+   25  sudo chmod g+x,o+x rootdir
+   26  ls -l rootdir
+   27  touch writeall
+   28  chmod a=rwx writeall
+   29  ls -l
+   30  poweroff
+   31  sudo poweroff
+   32  touch /home/devops/maratfile
+   33  cat /etc/group
+   34  useradd --help
+   35  sudo useradd -b -m maria -p {@Wrth01
+   36  sudo useradd -m maria -p {@Wrth01
+   37  cat /etc/passwd
+   38  cat /etc/group
+   39  useradd --help
+   40  userdel --help
+   41  sudo userdel -r maria
+   42  cat /etc/passwd
+   43  cat /etc/group
+   44  sudo useradd -m -c Maria maria -p {@Wrth01
+   45  cat /etc/passwd
+   46  groupadd --help
+   47  sudo groupadd devops
+   48  usermod --help
+   49  sudo usermod -a -G devops marat
+   50  sudo usermod -a -G devops maria
+   51  cat /etc/passwd
+   52  cat /etc/group
+   53  mkdir /home/maria/file
+   54  mkdir /home/devops
+   55  sudo mkdir /home/devops
+   56  chgrp --help
+   57  sudo chgrp devops /home/devops
+   58  ls -ld
+   59  ls -ld /home/
+   60  ls -l /home/
+   61  ]ls --help
+   62  ls --help
+   63  ls -l /home
+   64  sudo chmod g=rwx /home/devops
+   65  ls -l /home
+   66  sudo -u maria touch /home/devops/mariafile
+   67  touch /home/devops/maratfile
+   68  cat /etc/group
+   69  ls -l /home/
+   70  touch /home/devops/maratfile
+   71  ls /home/devops/
+   72  sudo apt update
+   73  sudo apt list --upgradable
+   74  sudo apt upgrade
+   75  sudo apt install vim
+   76  dpkg -l
+   77  dpkg -s vim
+   78  dpkg -L vim
+   79  dpkg -hhelp
+   80  dpkg --help
+   81  sudo apt-get install kxde
+   82  sudo apt-get install lxde
+   83  reboot
+   84  sudp reboot
+   85  sudo reboot
+   86  sudo apt-get update
+   87  sudo apt-get install sl
+   88  sl
+   89  vim
+   90  file hello_world
+   91  file /usr/bin/passwd
+   92  vim algebraist.txt
+   93  file algebraist.txt
+   94  vim algebraist.txt
+   95  sudo update-alternatives --config editor
+   96  sudo visudo
+   97  ды .рщ
+   98  ls /home/
+   99  ls /home/devops/
+  100  rm /home/devops/*file
+  101  ls /home/devops/
+  102  sudo chmod u+s /home/devops
+  103  chmod u+s /home/devops
+  104  sudo chmod u+s /home/devops
+  105  ls -la /home/
+  106  sudo touch /home/devops/file1
+  107  sudo touch /home/devops/file2
+  108  ls -la /home/devops/
+  109  sudo touch file3
+  110  ls -l file3
+  111  cd /home/devops/
+  112  ls
+  113  rm -f *
+  114  cd ..
+  115  cd ~
+  116  ls
+  117  rm file3
+  118  chmod g+s /home/devops/
+  119  sudo chmod g+s /home/devops/
+  120  sudo chmod u-s /home/devops/
+  121  ls -l /home/
+  122  sudo touch /home/devops/file1
+  123  ls -l /home/devops/file1
+  124  sudo touch file3
+  125  ls -l file3
+  126  sudo chmod +t /home/devops
+  127  ls /home/
+  128  ls -l /home/
+  129  touch /home/devops/file4
+  130  sudo -u maria touch /home/devops/file5
+  131  ls -l /home/devops/
+  132  sudo -u maria bash
+  133  sudo groupadd -a -G sudo maria
+  134  sudo usermod -a -G sudo maria
+  135  cat /etc/group | grep sudo
+  136  sudo visudo
+  137  stty -a
+  138  xeyes
+  139  apt-cache search xeyes
+  140  ls
+  141  reboot
+  142  sudo reboot
+  143  unminimize
+  144  ls /home/mar
+  145  ls /home/marat/
+  146  cd Downloads/
+  147  ls
+  148  touch picture{1..10}.jpg
+  149  ls
+  150  touch doc{1..10}.docx
+  151  ls
+  152  find /home/marat/Pictures/ -name "*.jpg" -exec mv {} /home/marat/Pictures/
+  153  find /home/marat/Downloads/ -name "*.jpg" -exec mv {} /home/marat/Pictures/
+  154  find /home/marat/Downloads/ -name "*.jpg" -exec mv {} /home/marat/Pictures/ \;
+  155  find /home/marat/Downloads/ -name "*.???x" -exec mv {} /home/marat/Documents/ \;
+  156  ls
+  157  ls ../Documents/
+  158  ls ../Pictures/
+  159  cd ..
+  160  vim mvdir.sh
+  161  stat /bin/ls
+  162  find /var/log/ -atime +7
+  163  find /var/log -atime +7
+  164  sudo find /var/log -atime +7
+  165  sudo find /var/log -atime -7
+  166  sudo find /var/log -atime -7 -type -f
+  167  sudo find /var/log -atime -7 -type f
+  168  sudo find /var/log -atime -7 -type f | wc -l
+  169  sudo find /var/log -atime -7 -type d
+  170  man find
+  171  unminimize
+  172  sudo unminimize
+  173  date
+  174  ls
+  175  chmod +x mvdir.sh
+  176  crontab -l
+  177  crontab -e
+  178  crontab -l
+  179  ls /tmp/
+  180  cat /tmp/date
+  181  crontab -e
+  182  crontab -l
+  183  vim rename.sh
+  184  cat rename.sh
+  185  man cp
+  186  vim rename.sh
+  187  man cp
+  188  cat mvdir.sh
+  189  man cp
+  190  cp --help
+  191  ls
+  192  cat mvdir.sh
+  193  cat rename.sh
+  194  cat mvdir.sh
