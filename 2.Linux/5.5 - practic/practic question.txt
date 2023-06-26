@@ -1,10 +1,14 @@
 Задача 1
-Echo "Some text here" > textfile - очистит файл и запишет запись "Some text here" в файл textfile
-Echo "More text!" >> textfile - добавить запись "More text!" новой строкой в файл textfile
-Echo "pineapple" > textfile - очистит файл и запишет запись "pineapple" в файл textfile
+echo "Some text here" > textfile - очистит файл и запишет запись "Some text here" в файл textfile
+echo "More text!" >> textfile - добавить запись "More text!" новой строкой в файл textfile
+echo "pineapple" > textfile - очистит файл и запишет запись "pineapple" в файл textfile
 
 Задача 2
-$ false && echo howdy! - не отработает echo howdy! т.к. предыдущая комманда завершилась с ошибкой
-$ true && echo howdy! - отработает echo howdy! т.к. предыдущая комманда не завершилась с ошибкой
-$ true || echo howdy! - не отработает echo howdy! т.к. предыдущая комманда не завершилась с ошибкой
-$ false || echo howdy! - отработает echo howdy! т.к. предыдущая комманда завершилась с ошибкой
+
+$ false && echo howdy! - не отработает echo howdy! т.к. предыдущая команда завершилась с ошибкой
+$ true && echo howdy! - отработает echo howdy! т.к. предыдущая команда не завершилась с ошибкой
+$ true || echo howdy! - не отработает echo howdy! т.к. предыдущая команда не завершилась с ошибкой
+$ false || echo howdy! - отработает echo howdy! т.к. предыдущая команда завершилась с ошибкой
+
+
+
