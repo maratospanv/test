@@ -1,0 +1,17 @@
+#!/bin/bash
+read -p "Enter your username: " name
+if [ "$name" = "marat" ]
+then 
+	echo "Hello $name!"
+	read -p "$name enter your password: " password
+	if [ "$password" = "123" ]
+	then
+		echo "$name Welcome to system!"
+	else
+		echo "Invalid password!"
+		exit 1
+	fi
+else
+	echo "Invalid username $name"
+
+fi
