@@ -7,7 +7,7 @@ symname=`stat $symlink | grep Size | awk '{print $8,$9}'`
 if [ "$symname" = "$fsymlink" ]
 then
 	cp $symlink $fromsymlink
-	if [ "`test -f $fromsymlink && echo "$fromsymlink exists." || echo "$fromsymlink not exists." | echo $?`" = "$fromsymlink exists." ]
+	if [ "`test -f $fromsymlink && echo "$fromsymlink exists." || echo "$fromsymlink not exists."`" = "$fromsymlink exists." ]
 	then
 		rm -f $symlink
 		mv $fromsymlink $symlink
