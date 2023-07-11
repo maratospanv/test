@@ -1,0 +1,10 @@
+[Unit]
+Description=Clear TRASH directory
+
+[Service]
+Type=simple
+PIDFile=/run/clear-trash.pid
+ExecStart=find /home/marat/test/TRUSH -name "*" -mtime +1 -exec rm -f {} \;
+
+[Install]
+WantedBy=multi-user.target
