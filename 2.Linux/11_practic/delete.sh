@@ -7,7 +7,7 @@ read -p "Enter file or directory name: " filename
 # Archive and move file
 symlink="symbolic link"
 symname=`stat $filename| grep Size | awk '{print $8,$9}'`
-finide=`ls -li $filename | awk '{print $1}'`
+findinode=`ls -li $filename | awk '{print $1}'`
 
 if [ "$symname" = "$symlink" ]
 then
@@ -16,7 +16,10 @@ then
 
 elif [ `ls -li $filename | awk '{print $3}'` -ne '1' ]
 then
+	echo "Linked files for $filename:"
+	find . -inum $findinode
 	tar --remove-files -czf $filename.tar.gz $filename && mv $filename.tar.gz TRUSH/
+	echo "File $filename archived and moved to TRASH directory!"
 else
 tar --remove-files -czf $filename.tar.gz $filename && mv $filename.tar.gz TRUSH/
 fi
