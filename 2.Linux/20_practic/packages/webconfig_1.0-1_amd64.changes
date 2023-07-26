@@ -1,0 +1,35 @@
+Format: 1.8
+Date: Wed, 26 Jul 2023 14:34:06 +0600
+Source: webconfig
+Binary: webconfig
+Built-For-Profiles: noudeb
+Architecture: source all
+Version: 1.0-1
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Marat Ospanov <marat@local>
+Changed-By: Marat Ospanov <marat@local>
+Description:
+ webconfig  - <insert up to 60 chars description>
+Changes:
+ webconfig (1.0-1) UNRELEASED; urgency=medium
+ .
+   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+Checksums-Sha1:
+ d0a0c1c5d649a9c578bfc7fed802b7e85f72329e 820 webconfig_1.0-1.dsc
+ 0b85af8bd87ce019fee7f92794a1d3f8dae4a0b5 1412 webconfig_1.0.orig.tar.xz
+ d4d5ee6b03efe87a022881ea8c943be10b9de3c2 2140 webconfig_1.0-1.debian.tar.xz
+ 77f7bc9f6c352e9f663d02abc57a2969a7a97e98 3308 webconfig_1.0-1_all.deb
+ 61e15e088f76bbc31fd78639919ffe718ae25834 5997 webconfig_1.0-1_amd64.buildinfo
+Checksums-Sha256:
+ 7591721958069f30522df1b391e404cd9ae2c83ea2d5485475fb469384bbcb9e 820 webconfig_1.0-1.dsc
+ 84dceff58391407cdf91cc6d1ba96da00ed45ecb0039a67ad5dd58b22ebe4504 1412 webconfig_1.0.orig.tar.xz
+ 53166419c9f5364bf17fe941a3995edbf8f11b9d03545f8a7ed4d1d58d0696e1 2140 webconfig_1.0-1.debian.tar.xz
+ aa2162107d1c07381b2b5754d245b74d14df21abe71416ac2d01ecd38b8771a3 3308 webconfig_1.0-1_all.deb
+ 634fa69c1669219c79941527149b6f3252452b6ec8ec59a8744daddec6b19494 5997 webconfig_1.0-1_amd64.buildinfo
+Files:
+ a3e5deca8a684d6f1d745d9a32c86c56 820 unknown optional webconfig_1.0-1.dsc
+ f362bbd17aeff7cfbd69a5390a721f86 1412 unknown optional webconfig_1.0.orig.tar.xz
+ c60ebe25fd3d0b3888bb550b5330373f 2140 unknown optional webconfig_1.0-1.debian.tar.xz
+ 2fa5b859236ae4054c59af6ce74714df 3308 unknown optional webconfig_1.0-1_all.deb
+ 58f6cf6b4c6717eee491c53404dbb86c 5997 unknown optional webconfig_1.0-1_amd64.buildinfo

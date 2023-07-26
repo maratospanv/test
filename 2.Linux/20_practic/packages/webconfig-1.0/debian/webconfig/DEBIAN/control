@@ -1,0 +1,10 @@
+Package: webconfig
+Version: 1.0-1
+Architecture: all
+Maintainer: Marat Ospanov <marat@local>
+Installed-Size: 17
+Section: unknown
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

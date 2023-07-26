@@ -1,0 +1,64 @@
+ dpkg-buildpackage -us -uc -ui
+dpkg-buildpackage: info: source package webconfig
+dpkg-buildpackage: info: source version 1.0-1
+dpkg-buildpackage: info: source distribution UNRELEASED
+dpkg-buildpackage: info: source changed by Marat Ospanov <marat@local>
+ dpkg-source --before-build .
+dpkg-buildpackage: info: host architecture amd64
+ debian/rules clean
+dh clean
+   dh_clean
+ dpkg-source -b .
+dpkg-source: info: using source format '3.0 (quilt)'
+dpkg-source: info: building webconfig using existing ./webconfig_1.0.orig.tar.xz
+dpkg-source: info: building webconfig in webconfig_1.0-1.debian.tar.xz
+dpkg-source: info: building webconfig in webconfig_1.0-1.dsc
+ debian/rules binary
+dh binary
+   dh_update_autotools_config
+   dh_autoreconf
+   create-stamp debian/debhelper-build-stamp
+   dh_prep
+   dh_auto_install --destdir=debian/webconfig/
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_missing
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package 'webconfig' in '../webconfig_1.0-1_all.deb'.
+ dpkg-genbuildinfo -O../webconfig_1.0-1_amd64.buildinfo
+ dpkg-genchanges -O../webconfig_1.0-1_amd64.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-buildpackage: info: full upload (original source is included)
+Now running lintian webconfig_1.0-1_amd64.changes ...
+E: webconfig source: bogus-mail-host Maintainer marat@local
+E: webconfig: bogus-mail-host Maintainer marat@local
+E: webconfig changes: bogus-mail-host Changed-By marat@local
+E: webconfig changes: bogus-mail-host Maintainer marat@local
+E: webconfig: bogus-mail-host-in-debian-changelog marat@local version 1.0-1 (line 1)
+E: webconfig: changelog-is-dh_make-template
+E: webconfig: copyright-contains-dh_make-todo-boilerplate
+E: webconfig source: debian-rules-is-dh_make-template
+E: webconfig: description-is-dh_make-template
+E: webconfig: helper-templates-in-copyright
+E: webconfig: section-is-dh_make-template
+W: webconfig source: bad-homepage <insert the upstream URL, if relevant>
+W: webconfig: bad-homepage <insert the upstream URL, if relevant>
+W: webconfig: copyright-has-url-from-dh_make-boilerplate
+W: webconfig: initial-upload-closes-no-bugs
+W: webconfig: maintainer-script-ignores-errors [postrm]
+W: webconfig source: maintainer-script-lacks-debhelper-token [debian/postrm]
+W: webconfig source: space-in-std-shortname-in-dep5-copyright <special license> [debian/copyright:9]
+W: webconfig source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: webconfig: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: webconfig: wrong-bug-number-in-closes #nnnn in the installed changelog (line 3)
+Finished running lintian.

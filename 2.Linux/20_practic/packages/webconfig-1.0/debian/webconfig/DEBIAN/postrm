@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -f /etc/etc/nginx/sites-available/webconfig.conf
