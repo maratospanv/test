@@ -1,0 +1,16 @@
+Source: wordpresscfg
+Section: unknown
+Priority: optional
+Maintainer: Marat Ospanov <marat@local>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/wordpresscfg
+#Vcs-Git: https://salsa.debian.org/debian/wordpresscfg.git
+Rules-Requires-Root: no
+
+Package: wordpresscfg
+Architecture: all
+Depends: ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
