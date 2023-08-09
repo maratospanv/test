@@ -1,7 +1,22 @@
 5. Мониторинг nginx, php-fpm
+
 6. Мониторинг MySQL
+
 7. Мониторинг сети
+rate(node_network_receive_errs_total[5m]) OR rate(node_network_transmit_errs_total[5m]) = 100
+если на порту количество ошибок равно 100 по приему или тправке то уведомляем
+
 4. Мониторинг времени
+node_timex_offset_seconds = 5 OR node_timex_sync_status = 0
+если разница между локальным времиенм и сервером времени 5 секунд или синхронизация не работает то уыедомлем 
+
+
 3. Мониторинг диска - 
+((node_filesystem_size_bytes{mountpoint="/"}) - (node_filesystem_free_bytes{mountpoint="/"} ))  / ((node_filesystem_size_bytes{mountpoint="/"}) / 100 )
+если равно 85% то уведомляем алертом
+
 2. Мониторинг памяти - свододная память
+(node_memory_MemTotal_bytes / 1024 /1024) - (node_memory_MemFree_bytes / 1024 / 1024) - ((node_memory_Buffers_bytes /1024 / 1024) + (node_memory_Cached_bytes / 1024 / 1024)) = ((node_memory_MemTotal_bytes / 1024 /1024) / 100) * 85
+если занятая память равна 85% то уведомляем алертом
+
 1. Мониторинг процессора - load avarage
