@@ -1,6 +1,11 @@
-5. Мониторинг nginx, php-fpm
+5. Мониторинг nginx
+rate(nginx_connections_active[5m]) == 0 or nginx_up == 0
+Если активных соединений в течении 5 мин равен 0 или статус сервиса не в UP тогда уведомляем
 
 6. Мониторинг MySQL
+mysql_global_status_connection_errors_total > 0
+Если есть ошибки при соединении с БД для выборки, локальные ошиби тогда уведомлять
+
 
 7. Мониторинг сети
 rate(node_network_receive_errs_total[5m]) OR rate(node_network_transmit_errs_total[5m]) = 100
@@ -20,3 +25,5 @@ node_timex_offset_seconds = 5 OR node_timex_sync_status = 0
 если занятая память равна 85% то уведомляем алертом
 
 1. Мониторинг процессора - load avarage
+rate(node_cpu_seconds_total{mode="system"}[5m]) > 1
+Если процессор нагружен более еденицы (потому что у меня одно ядро), то уведомляем
