@@ -21,9 +21,9 @@ node_timex_offset_seconds = 5 OR node_timex_sync_status = 0
 если равно 85% то уведомляем алертом
 
 2. Мониторинг памяти - свододная память
-(node_memory_MemTotal_bytes / 1024 /1024) - (node_memory_MemFree_bytes / 1024 / 1024) - ((node_memory_Buffers_bytes /1024 / 1024) + (node_memory_Cached_bytes / 1024 / 1024)) = ((node_memory_MemTotal_bytes / 1024 /1024) / 100) * 85
-если занятая память равна 85% то уведомляем алертом
+((node_memory_MemTotal_bytes) - (node_memory_MemAvailable_bytes)) / ((node_memory_MemTotal_bytes) / 100) > 85
+если занятая память равна 85% в течении 2 минут, то уведомляем алертом 
 
 1. Мониторинг процессора - load avarage
-rate(node_cpu_seconds_total{mode="system"}[5m]) > 1
-Если процессор нагружен более еденицы (потому что у меня одно ядро), то уведомляем
+100 - avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) without (cpu) * 100 > 85
+Если процессор нагружен более 85% в течении 2 минут, то уведомляем
