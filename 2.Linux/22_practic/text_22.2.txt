@@ -1,3 +1,19 @@
+1. Мониторинг процессора - load avarage
+100 - avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) without (cpu) * 100 > 85
+Если процессор нагружен более 85% в течении 2 минут, то уведомляем
+
+2. Мониторинг памяти - свододная память
+((node_memory_MemTotal_bytes) - (node_memory_MemAvailable_bytes)) / ((node_memory_MemTotal_bytes) / 100) > 85
+если занятая память равна 85% в течении 2 минут, то уведомляем алертом 
+
+3. Мониторинг диска - 
+((node_filesystem_size_bytes{mountpoint="/"}) - (node_filesystem_free_bytes{mountpoint="/"} ))  / ((node_filesystem_size_bytes{mountpoint="/"}) / 100 )
+если равно 85% то уведомляем алертом
+
+4. Мониторинг времени
+node_timex_offset_seconds = 5 OR node_timex_sync_status = 0
+если разница между локальным времиенм и сервером времени 5 секунд или синхронизация не работает то уыедомлем 
+
 5. Мониторинг nginx
 rate(nginx_connections_active[5m]) == 0 or nginx_up == 0
 Если активных соединений в течении 5 мин равен 0 или статус сервиса не в UP тогда уведомляем
@@ -6,24 +22,6 @@ rate(nginx_connections_active[5m]) == 0 or nginx_up == 0
 mysql_global_status_connection_errors_total > 0
 Если есть ошибки при соединении с БД для выборки, локальные ошиби тогда уведомлять
 
-
 7. Мониторинг сети
 rate(node_network_receive_errs_total[5m]) OR rate(node_network_transmit_errs_total[5m]) = 100
 если на порту количество ошибок равно 100 по приему или тправке то уведомляем
-
-4. Мониторинг времени
-node_timex_offset_seconds = 5 OR node_timex_sync_status = 0
-если разница между локальным времиенм и сервером времени 5 секунд или синхронизация не работает то уыедомлем 
-
-
-3. Мониторинг диска - 
-((node_filesystem_size_bytes{mountpoint="/"}) - (node_filesystem_free_bytes{mountpoint="/"} ))  / ((node_filesystem_size_bytes{mountpoint="/"}) / 100 )
-если равно 85% то уведомляем алертом
-
-2. Мониторинг памяти - свододная память
-((node_memory_MemTotal_bytes) - (node_memory_MemAvailable_bytes)) / ((node_memory_MemTotal_bytes) / 100) > 85
-если занятая память равна 85% в течении 2 минут, то уведомляем алертом 
-
-1. Мониторинг процессора - load avarage
-100 - avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) without (cpu) * 100 > 85
-Если процессор нагружен более 85% в течении 2 минут, то уведомляем
