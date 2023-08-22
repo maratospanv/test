@@ -68,4 +68,6 @@ sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf /etc/ope
 sudo sed -i 's/dh dh2048.pem/;dh dh2048.pem/g' /etc/openvpn/server/server.conf && \ 
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p && \ 
 sudo echo 'dh none' >> /etc/openvpn/server/server.conf && \
-sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g''
+sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw && \ 
+sudo ufw allow 1194/udp && sudo ufw allow OpenSSH && sudo ufw disable && sudo ufw enable && \
+systemctl -f enable openvpn-server@server.service && systemctl start openvpn-server@server.service'
