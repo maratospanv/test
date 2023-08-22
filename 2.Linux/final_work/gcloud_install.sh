@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 #sudo apt-get update
 #sudo apt-get install -y apt-transport-https ca-certificates gnupg curl sudo
 #sudo echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -35,7 +35,7 @@ cd ~/easy-rsa && \
 cp vars.example vars && \
 echo 'set_var EASYRSA_ALGO           ec' >> vars && \
 echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
-./easyrsa init-pki'
+./easyrsa init-pki
 #echo -ne '\n' | ./easyrsa gen-req vpn nopass'
 
 
@@ -58,21 +58,22 @@ gcloud compute instances create vpn-server \
 sleep 30
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa openvpn git && \
+cd ~ && git clone https://github.com/maratospanv/test.git && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
 cp vars.example vars && \
 echo 'set_var EASYRSA_ALGO           ec' >> vars && \
-echo 'set_var EASYRSA_DIGEST sha512' >> varsvpn-server && \
-sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf /etc/openvpn/server/ && \
-sudo sed -i 's/dh dh2048.pem/;dh dh2048.pem/g' /etc/openvpn/server/server.conf && \ 
+echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p && \ 
-sudo echo 'dh none' >> /etc/openvpn/server/server.conf && \
 sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw && \ 
-sudo ufw allow 1194/udp && sudo ufw allow OpenSSH && sudo ufw disable && sudo ufw enable && \
-systemctl -f enable openvpn-server@server.service && systemctl start openvpn-server@server.service && \
-mkdir -p ~/client-configs/files && \
-myip=`dig @resolver4.opendns.com myip.opendns.com +short` && myport=1194 && \
+sudo cp ~/test/2.Linux/final_work/before.rules /etc/ufw/before.rules && \
+sudo ufw enable && sudo ufw allow 1194/udp && sudo ufw allow OpenSSH && echo "y" | sudo ufw disable && echo "y" | sudo ufw enable && \
+mkdir -p ~/client-configs/{files,keys} && \
+cp ~/test/2.Linux/final_work/base.conf ~/client-configs/base.conf && \
+cp ~/test/2.Linux/final_work/make_config.sh ~/client-configs/ && \
+sudo cp ~/test/2.Linux/final_work/{ca.crt,ta.key} ~/client-configs/keys/ && \
+myip=`dig @resolver4.opendns.com myip.opendns.com +short` && myport=1194 && \s
 sed -i "s/remote my-server-1 1194/remote $myip $myport/g" ~/client-configs/base.conf && sed -i "s/remote my-server-1 1194/remote $myip $myport/g" ~/client-configs/base.conf && \
-cd ~ && git clone https://github.com/maratospanv/test.git && \
-sudo cp ~/test/2.Linux/final_work/{ca.crt,vpn.crt,server.conf} /etc/openvpn/server/ && sudo chown root:root /etc/openvpn/server/{ca.crt,vpn.crt,server.conf}'
+sudo cp ~/test/2.Linux/final_work/{ca.crt,vpn.crt,server.conf,ta.key,vpn.key} /etc/openvpn/server/ && sudo chown root:root /etc/openvpn/server/{ca.crt,vpn.crt,server.conf,ta.key,vpn.key} && \
+sudo systemctl -f enable openvpn-server@server.service && sudo systemctl start openvpn-server@server.service'
