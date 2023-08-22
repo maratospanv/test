@@ -57,7 +57,7 @@ gcloud compute instances create vpn-server \
     --reservation-affinity=any
 sleep 30
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa openvpn && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa openvpn git && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -70,4 +70,9 @@ sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf 
 sudo echo 'dh none' >> /etc/openvpn/server/server.conf && \
 sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw && \ 
 sudo ufw allow 1194/udp && sudo ufw allow OpenSSH && sudo ufw disable && sudo ufw enable && \
-systemctl -f enable openvpn-server@server.service && systemctl start openvpn-server@server.service'
+systemctl -f enable openvpn-server@server.service && systemctl start openvpn-server@server.service && \
+mkdir -p ~/client-configs/files && \
+myip=`dig @resolver4.opendns.com myip.opendns.com +short` && myport=1194 && \
+sed -i "s/remote my-server-1 1194/remote $myip $myport/g" ~/client-configs/base.conf && sed -i "s/remote my-server-1 1194/remote $myip $myport/g" ~/client-configs/base.conf && \
+cd ~ && git clone https://github.com/maratospanv/test.git && \
+sudo cp ~/test/2.Linux/final_work/{ca.crt,vpn.crt,server.conf} /etc/openvpn/server/ && sudo chown root:root /etc/openvpn/server/{ca.crt,vpn.crt,server.conf}'
