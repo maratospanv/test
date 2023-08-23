@@ -1,6 +1,4 @@
 #!/bin/bash
-#sudo apt update && sudo apt-get install -y easy-rsa openvpn git && \
-#cd ~ && git clone https://github.com/maratospanv/test.git && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
