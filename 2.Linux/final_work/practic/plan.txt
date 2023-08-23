@@ -27,4 +27,4 @@
     echo 'set_var EASYRSA_DIGEST sha512' >> vars
     source ./vars
     ./easyrsa init-pki'
-    
+    echo -ne "p@$$w0rD\np@$$w0rD\n\n" | ./easyrsa build-ca
