@@ -69,9 +69,9 @@ echo -ne "\n" | ./easyrsa gen-req vpn nopass && \
 cd ~ && git clone https://github.com/maratospanv/test.git'
 gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~ && \
 gcloud compute scp ~/vpn.req pki-server:~/ 
-gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'cd cd /home/`whoami`/easy-rsa/ && \ && \
+gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa import-req ~/vpn.req server && \
 cp ~/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
-cd /home/`whoami`/easy-rsa/ && \ && \
+cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa sign-req server vpn'
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
