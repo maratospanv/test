@@ -66,6 +66,7 @@ cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa init-pki && \
 cd /home/`whoami`/easy-rsa/ && \
 echo -ne "\n" | ./easyrsa gen-req vpn nopass && \
+openvpn --genkey --secret ta.key
 cd ~ && git clone https://github.com/maratospanv/test.git'
 gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~ && \
 gcloud compute scp ~/vpn.req pki-server:~/ 
@@ -74,4 +75,11 @@ gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{prin
 cp ~/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
 cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa sign-req server vpn'
-#gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
+gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt ~/ && \
+gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/ && \
+gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/ && \
+gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/ && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
+gcloud compute scp {ca.crt,vpn.crt,vpn.keyta.key} vpn-server:~/certs && \
+#gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
