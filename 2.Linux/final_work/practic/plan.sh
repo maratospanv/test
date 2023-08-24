@@ -80,6 +80,6 @@ gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/ && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/ && \
 gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/ && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
-gcloud compute scp {ca.crt,vpn.crt,vpn.keyta.key} vpn-server:~/certs && \
+gcloud compute scp {ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
