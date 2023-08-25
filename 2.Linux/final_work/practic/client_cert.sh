@@ -14,4 +14,4 @@ gcloud compute scp ~/client-reqs/client3.crt vpn-server:~/client-configs/keys/
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~/client-configs/keys/ && \
 sudo chmod 744 * && \
 cd ~/client-configs/ && ./make_config.sh client3'
-gcloud compute scp vpn-server:~/client-configs/client3.ovpn ~/client-reqs
+gcloud compute scp vpn-server:~/client-configs/files/client3.ovpn ~/client-reqs
