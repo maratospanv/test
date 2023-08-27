@@ -17,7 +17,7 @@ gcloud compute instances create pki-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
-gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa git prometheus-node-exporter && \
+gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa git prometheus-node-exporter expect-dev expect && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -28,7 +28,8 @@ echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
 cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa init-pki && \
 cd /home/`whoami`/easy-rsa/ && \
-./easyrsa build-ca'
+pass=MasterAdmin1 && \
+echo -e "$pass\n$pass\n" | ./easyrsa build-ca'
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo systemctl restart sshd.service
 #sudo useradd vpn && echo -ne "p@$$w0rD\np@$$w0rD\n" | sudo passwd vpn && sudo usermod -aG sudo vpn && sudo usermod -aG google-sudoers vpn'
@@ -52,7 +53,7 @@ gcloud compute instances create vpn-server \
     --reservation-affinity=any
 sleep 30
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config  && \
 #sudo systemctl restart sshd.service && \
@@ -74,7 +75,15 @@ gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{prin
 ./easyrsa import-req ~/vpn.req server && \
 cp ~/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
 cd /home/`whoami`/easy-rsa/ && \
-./easyrsa sign-req server vpn'
+pass=MasterAdmin1 && \
+/usr/bin/expect<<EOF
+    spawn /home/marat/easy-rsa/easyrsa sign-req server vpn
+    expect "Confirm*"
+    send "yes\n"
+    expect "Enter*"
+    send "$pass\n"
+    expect eof
+EOF'
 gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt ~/ && \
 gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/ && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/ && \

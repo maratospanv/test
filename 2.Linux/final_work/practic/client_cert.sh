@@ -1,5 +1,5 @@
 #!/bin/bash
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~/easy-rsa && \\
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~/easy-rsa && \
 ./easyrsa gen-req client3 nopass'
 #req: /home/marat/easy-rsa/pki/reqs/client3.req
 #key: /home/marat/easy-rsa/pki/private/client3.key
