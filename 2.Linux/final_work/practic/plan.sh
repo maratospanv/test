@@ -1,5 +1,4 @@
 #1. создать чистый pki сервер
-#!/bin/bash
 gcloud config set project avid-glass-396110
 gcloud compute instances create pki-server \
     --project=avid-glass-396110 \
@@ -17,6 +16,10 @@ gcloud compute instances create pki-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
+if [ -d "~/vpnconf" ]; then
+  rm -rf ~/vpnconf
+  mkdir ~/vpnconf
+fi
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt update && sudo apt-get install -y easy-rsa git prometheus-node-exporter expect-dev expect && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
@@ -28,8 +31,11 @@ echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
 cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa init-pki && \
 cd /home/`whoami`/easy-rsa/ && \
-pass=MasterAdmin1 && \
-echo -e "$pass\n$pass\n" | ./easyrsa build-ca'
+capass=`date +%s | sha256sum | base64 | head -c 32 ; echo` && \
+echo $capass > ca.txt && \
+echo -e "$capass\n$capass\n" | ./easyrsa build-ca' && \
+rm -f ~/vpnconf/* && \
+gcloud compute scp pki-server:~/easy-rsa/ca.txt ~/vpnconf
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo systemctl restart sshd.service
 #sudo useradd vpn && echo -ne "p@$$w0rD\np@$$w0rD\n" | sudo passwd vpn && sudo usermod -aG sudo vpn && sudo usermod -aG google-sudoers vpn'
@@ -69,26 +75,27 @@ cd /home/`whoami`/easy-rsa/ && \
 echo -ne "\n" | ./easyrsa gen-req vpn nopass && \
 openvpn --genkey --secret ta.key
 cd ~ && git clone https://github.com/maratospanv/test.git'
-gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~ && \
-gcloud compute scp ~/vpn.req pki-server:~/ 
+gcloud compute scp ~/vpnconf/ca.txt vpn-server:~/easy-rsa/ && \
+gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~/vpnconf && \
+gcloud compute scp ~/vpnconf/vpn.req pki-server:~/easy-rsa/
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'cd /home/`whoami`/easy-rsa/ && \
-./easyrsa import-req ~/vpn.req server && \
-cp ~/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
+./easyrsa import-req /home/`whoami`/easy-rsa/vpn.req server && \
+cp /home/`whoami`/easy-rsa/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
 cd /home/`whoami`/easy-rsa/ && \
-pass=MasterAdmin1 && \
+capassvpn=`cat ~/easy-rsa/ca.txt` && \
 /usr/bin/expect<<EOF
     spawn /home/marat/easy-rsa/easyrsa sign-req server vpn
     expect "Confirm*"
     send "yes\n"
     expect "Enter*"
-    send "$pass\n"
+    send "$capassvpn\n"
     expect eof
 EOF'
-gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt ~/ && \
-gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/ && \
-gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/ && \
-gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/ && \
+gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt ~/vpnconf && \
+gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/vpnconf && \
+gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/vpnconf && \
+gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/vpnconf && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
-gcloud compute scp {ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
+gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'

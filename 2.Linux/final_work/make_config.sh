@@ -7,7 +7,7 @@ OUTPUT_DIR=~/client-configs/files
 BASE_CONFIG=~/client-configs/base.conf
 
 cat ${BASE_CONFIG} \
-    <(echo -e '<ca>') \
+    <(echo -e '\n<ca>') \
     ${KEY_DIR}/ca.crt \
     <(echo -e '</ca>\n<cert>') \
     ${KEY_DIR}/${1}.crt \
