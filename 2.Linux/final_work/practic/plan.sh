@@ -16,7 +16,7 @@ gcloud compute instances create pki-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
-if [ -d "~/vpnconf" ]; then
+if [ ! -d "~/vpnconf" ]; then
   rm -rf ~/vpnconf
   mkdir ~/vpnconf
 fi
