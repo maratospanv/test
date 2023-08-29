@@ -14,3 +14,5 @@ sed -i "s/remote my-server-1 1194/remote $myip $myport/g" ~/client-configs/base.
 sudo sed -i "s/$oldiface/$iface/g" /etc/ufw/before.rules && \
 sudo cp ~/certs/{ca.crt,vpn.crt,ta.key,vpn.key} /etc/openvpn/server/ && sudo cp ~/test/2.Linux/final_work/server.conf /etc/openvpn/server/ && sudo chown root:root /etc/openvpn/server/{ca.crt,vpn.crt,ta.key,vpn.key,server.conf} && \
 sudo systemctl -f enable openvpn-server@server.service && sudo systemctl restart openvpn-server@server.service
+sleep 10
+sudo reboot
