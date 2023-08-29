@@ -100,7 +100,3 @@ gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{prin
 gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
-sleep 15
-gcloud compute instance stop vpn-server
-sleep 60
-gcloud compute instance start vpn-server
