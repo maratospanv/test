@@ -13,4 +13,4 @@ oldifase=eth0 && \
 iface=`ip a | grep '2: ' | awk '{print $2}' | sed 's/://g'` && \
 sudo sed -i "s/$oldiface/$iface/g" /etc/ufw/before.rules && \
 sudo cp ~/certs/{ca.crt,vpn.crt,ta.key,vpn.key} /etc/openvpn/server/ && sudo cp ~/test/2.Linux/final_work/server.conf /etc/openvpn/server/ && sudo chown root:root /etc/openvpn/server/{ca.crt,vpn.crt,ta.key,vpn.key,server.conf} && \
-sudo systemctl -f enable openvpn-server@server.service && sudo systemctl start openvpn-server@server.service
+sudo systemctl -f enable openvpn-server@server.service && sudo systemctl restart openvpn-server@server.service
