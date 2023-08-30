@@ -21,7 +21,7 @@ if [ ! -d "~/vpnconf" ]; then
   rm -rf ~/vpnconf
   mkdir ~/vpnconf
 fi
-gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt update && sudo apt upgrade -y && sudo apt-get install -y easy-rsa git prometheus-node-exporter expect-dev expect && \
+gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt update qq -&& sudo apt upgrade -y -qq && sudo apt-get install -y easy-rsa git prometheus-node-exporter expect-dev expect && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -60,7 +60,7 @@ gcloud compute instances create vpn-server \
     --reservation-affinity=any
 sleep 30
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt upgrade -y && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update -qq && sudo apt upgrade -y -qq && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config  && \
 #sudo systemctl restart sshd.service && \
@@ -101,7 +101,7 @@ gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs 
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
 
-#2. создать чистый mon сервер
+#3. создать чистый mon сервер
 gcloud config set project avid-glass-396110
 gcloud compute instances create mon-server \
     --project=avid-glass-396110 \
@@ -120,7 +120,7 @@ gcloud compute instances create mon-server \
     --reservation-affinity=any
 sleep 30
 gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS  && \
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update && sudo apt upgrade -y && sudo apt-get install -y prometheus'  && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt update -qq && sudo apt upgrade -y -qq && sudo apt-get install -y prometheus'  && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ && \
 gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
