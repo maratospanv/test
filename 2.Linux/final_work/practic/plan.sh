@@ -147,7 +147,6 @@ sudo cat << EOF >> /etc/prometheus/prometheus.yml
     static_configs:
       - targets: ['vpn-server:9100']
 EOF
-
 sudo cat << EOF >> /etc/prometheus/alert.rules.yml
 groups:
     - name: _alerts
@@ -179,7 +178,6 @@ groups:
           summary: High Disk utilization on host {{ $labels.instance }}
           description: The Disk utilization on host {{ $labels.instance }} has exceeded 85% for 5 minutes.
 EOF
-
 sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml && \
 sudo systemctl restart prometheus prometheus-alertmanager' && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
