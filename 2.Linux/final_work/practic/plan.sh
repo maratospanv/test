@@ -74,7 +74,7 @@ cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa init-pki && \
 cd /home/`whoami`/easy-rsa/ && \
 echo -ne "\n" | ./easyrsa gen-req vpn nopass && \
-openvpn --genkey --secret ta.key
+openvpn --genkey --secret ta.key && \
 cd ~ && git clone https://github.com/maratospanv/test.git'
 gcloud compute scp ~/vpnconf/ca.txt vpn-server:~/easy-rsa/ && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~/vpnconf && \
@@ -119,15 +119,29 @@ gcloud compute instances create mon-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
-gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS  && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y git prometheus prometheus-alertmanager'  && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update'
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager
+cd ~ && git clone https://github.com/maratospanv/test.git && \
+sudo chmod 777 /etc/prometheus/prometheus.yml && \
+sudo cat << EOF >> /etc/prometheus/prometheus.yml
+  - job_name: mon-server
+    static_configs:
+      - targets: ['mon-server:9100']
+
+  - job_name: pki-server
+    static_configs:
+      - targets: ['pki-server:9100']
+
+  - job_name: vpn-serer
+    static_configs:
+      - targets: ['vpn-server:9100']
+EOF
+sudo chmod 644 /etc/prometheus/prometheus.yml && \
+sudo systemctl restart prometheus prometheus-alertmanager' && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ && \
 gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
 gcloud compute scp ~/gcinstance.txt mon-server:~/ && \
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'cd ~ && git clone https://github.com/maratospanv/test.git && \
-bash /home/`whoami`/test/2.Linux/final_work/mon.sh && \
-sudo systemctl restart prometheus prometheus-alertmanager'
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts'
