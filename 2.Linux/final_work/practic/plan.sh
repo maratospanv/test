@@ -103,7 +103,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/vpnconf && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
 gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
-gcloud compute instances stop vpn-server && gcloud compute instances stop vpn-server && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot' && \
 
 
 #3. создать чистый mon сервер
