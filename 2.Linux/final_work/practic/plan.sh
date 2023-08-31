@@ -59,7 +59,11 @@ gcloud compute instances create vpn-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
+if [ `gcloud compute firewall-rules list --format=json | grep allow-1195 | grep name > /dev/null && echo $?` == 0 ]; then
+echo "===Rule exixsts==="
+else
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
+fi
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config  && \
@@ -98,8 +102,9 @@ gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/vpnconf && \
 gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/vpnconf && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
 gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
-#gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ certs && sudo cp * /etc/openvpn/server/' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
+gcloud compute instances stop vpn-server && gcloud compute instances stop vpn-server && \
+
 
 #3. создать чистый mon сервер
 gcloud config set project avid-glass-396110
@@ -119,6 +124,11 @@ gcloud compute instances create mon-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
+if [ `gcloud compute firewall-rules list --format=json | grep allow-9090 | grep name > /dev/null && echo $?` == 0 ]; then
+echo "===Rule exixsts==="
+else
+gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
+fi
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update'
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager
 cd ~ && git clone https://github.com/maratospanv/test.git && \
