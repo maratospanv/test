@@ -12,7 +12,7 @@ sudo cat << EOF >> /etc/prometheus/prometheus.yml
   - job_name: vpn-serer
     static_configs:
       - targets: ['vpn-server:9100']
-EOF && \
+EOF
 sudo chmod 644 /etc/prometheus/prometheus.yml
 
 
