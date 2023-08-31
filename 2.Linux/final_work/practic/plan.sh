@@ -132,8 +132,10 @@ fi
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update'
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager
 cd ~ && git clone https://github.com/maratospanv/test.git && \
+if [ ! -e "alert.rules.yml" ]; then
+    touch "alert.rules.yml"
+fi
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
-
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
   - job_name: mon-server
     static_configs:
