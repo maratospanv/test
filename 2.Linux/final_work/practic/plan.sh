@@ -120,7 +120,7 @@ gcloud compute instances create mon-server \
     --reservation-affinity=any
 sleep 30
 gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS  && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y prometheus prometheus-alertmanager'  && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y git prometheus prometheus-alertmanager'  && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ && \
 gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
@@ -128,3 +128,4 @@ gcloud compute scp ~/gcinstance.txt mon-server:~/ && \
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts'
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'cd ~ && git clone https://github.com/maratospanv/test.git'
