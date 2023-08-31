@@ -127,5 +127,7 @@ gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
 gcloud compute scp ~/gcinstance.txt mon-server:~/ && \
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts'
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'cd ~ && git clone https://github.com/maratospanv/test.git'
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'cd ~ && git clone https://github.com/maratospanv/test.git && \
+bash /home/`whoami`/test/2.Linux/final_work/mon.sh && \
+sudo systemctl restart prometheus prometheus-alertmanager'
