@@ -1,4 +1,9 @@
 #!/bin/bash
+confdir=~/vpnconf
+if [ ! -d $confdir ]; then
+  rm -rf $confdir
+  mkdir $confdir
+fi
 #1. создать чистый pki сервер
 gcloud config set project avid-glass-396110
 gcloud compute instances create pki-server \
@@ -17,11 +22,9 @@ gcloud compute instances create pki-server \
     --labels=goog-ec-src=vm_add-gcloud \
     --reservation-affinity=any
 sleep 30
-if [ ! -d "~/vpnconf" ]; then
-  rm -rf ~/vpnconf
-  mkdir ~/vpnconf
-fi
-gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install easy-rsa git prometheus-node-exporter expect-dev expect && \
+gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'echo =========Update/Install packages========= && \
+sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install easy-rsa git prometheus-node-exporter expect-dev expect > apt.txt && \
+echo =========Configure CA Server========= && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -30,16 +33,14 @@ echo 'set_var EASYRSA_BATCH          "yes"' >> vars && \
 echo 'set_var EASYRSA_ALGO           ec' >> vars && \
 echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
 cd /home/`whoami`/easy-rsa/ && \
-./easyrsa init-pki && \
+./easyrsa init-pki 1>/dev/null && \
 cd /home/`whoami`/easy-rsa/ && \
 capass=`date +%s | sha256sum | base64 | head -c 32 ; echo` && \
 echo $capass > ca.txt && \
-echo -e "$capass\n$capass\n" | ./easyrsa build-ca' && \
-rm -f ~/vpnconf/* && \
-gcloud compute scp pki-server:~/easy-rsa/ca.txt ~/vpnconf
-#sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
-#sudo systemctl restart sshd.service
-#sudo useradd vpn && echo -ne "p@$$w0rD\np@$$w0rD\n" | sudo passwd vpn && sudo usermod -aG sudo vpn && sudo usermod -aG google-sudoers vpn'
+echo =========Build CA Certificate========= && \
+echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null' && \
+rm -f $confdir/* && \
+gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
 #2. создать чистый vpn сервер
 gcloud config set project avid-glass-396110
@@ -57,32 +58,30 @@ gcloud compute instances create vpn-server \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
     --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any
+    --reservation-affinity=any 1> /dev/null
 sleep 30
 if [ `gcloud compute firewall-rules list --format=json | grep allow-1195 | grep name > /dev/null && echo $?` == 0 ]; then
 echo "===Rule exixsts==="
 else
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
 fi
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
-#sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
-#sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config  && \
-#sudo systemctl restart sshd.service && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect > apt.txt && \
+echo =========Create VPN Server Certs=========
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
 cp vars.example vars && \
 echo 'set_var EASYRSA_ALGO           ec' >> vars && \
 echo 'set_var EASYRSA_DIGEST sha512' >> vars && \
-cd /home/`whoami`/easy-rsa/ && \
+cd /home/`whoami`/easy-rsa/ && \s
 ./easyrsa init-pki && \
 cd /home/`whoami`/easy-rsa/ && \
-echo -ne "\n" | ./easyrsa gen-req vpn nopass && \
+echo -ne "\n" | ./easyrsa gen-req vpn nopass > /dev/null && \
 openvpn --genkey --secret ta.key && \
 cd ~ && git clone https://github.com/maratospanv/test.git'
-gcloud compute scp ~/vpnconf/ca.txt vpn-server:~/easy-rsa/ && \
-gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req ~/vpnconf && \
-gcloud compute scp ~/vpnconf/vpn.req pki-server:~/easy-rsa/
+gcloud compute scp $confdir/ca.txt vpn-server:~/easy-rsa/ > /dev/null && \
+gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req $confdir > /dev/null && \
+gcloud compute scp $confdir/vpn.req pki-server:~/easy-rsa/ > /dev/null
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'cd /home/`whoami`/easy-rsa/ && \
 ./easyrsa import-req /home/`whoami`/easy-rsa/vpn.req server && \
 cp /home/`whoami`/easy-rsa/vpn.req /home/`whoami`/easy-rsa/pki/reqs && \
@@ -96,14 +95,15 @@ capassvpn=`cat ~/easy-rsa/ca.txt` && \
     send "$capassvpn\n"
     expect eof
 EOF'
-gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt ~/vpnconf && \
-gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt ~/vpnconf && \
-gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key ~/vpnconf && \
-gcloud compute scp vpn-server:~/easy-rsa/ta.key ~/vpnconf && \
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' && \
-gcloud compute scp ~/vpnconf/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh'
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot' && \
+gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt $confdir > /dev/null && \
+gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt $confdir > /dev/null && \
+gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key $confdir > /dev/null && \
+gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
+gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs > /dev/null && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo =========Configure VPN Server========= && \
+bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null'
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot' 2>/dev/null && \
 
 
 #3. создать чистый mon сервер
@@ -130,7 +130,7 @@ else
 gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
 fi
 #gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install git prometheus prometheus-alertmanager && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install git prometheus prometheus-alertmanager > apt.txt && \
 cd ~ && git clone https://github.com/maratospanv/test.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
