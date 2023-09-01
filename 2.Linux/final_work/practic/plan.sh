@@ -180,10 +180,9 @@ groups:
           summary: High Disk utilization on host {{ $labels.instance }}
           description: The Disk utilization on host {{ $labels.instance }} has exceeded 85% for 5 minutes.
 EOF
-echo && \
-sudo sed -i '/'rule_files:'/a\  - "alert.rules.yml"' /etc/prometheus/prometheus.yml && \
-sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml && \
-sudo systemctl restart prometheus prometheus-alertmanager' && \
+sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml' && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- "sudo sed -i '/'rule_files:'/a\  - "alert.rules.yml"' /etc/prometheus/prometheus.yml && \
+sudo systemctl restart prometheus prometheus-alertmanager'" && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ && \
 gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
