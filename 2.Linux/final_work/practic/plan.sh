@@ -137,7 +137,6 @@ if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
 fi 
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
-echo
   - job_name: mon-server
     static_configs:
       - targets: ['mon-server:9100']
@@ -181,6 +180,7 @@ groups:
           summary: High Disk utilization on host {{ $labels.instance }}
           description: The Disk utilization on host {{ $labels.instance }} has exceeded 85% for 5 minutes.
 EOF
+sudo sed -i '/'rule_files:'/a\  - "alert.ryles.yml"' /etc/prometheus/prometheus.yml && \
 sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml && \
 sudo systemctl restart prometheus prometheus-alertmanager' && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
