@@ -137,6 +137,7 @@ if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
 fi 
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
+echo
   - job_name: mon-server
     static_configs:
       - targets: ['mon-server:9100']
