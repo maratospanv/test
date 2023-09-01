@@ -127,14 +127,14 @@ sleep 30
 if [ `gcloud compute firewall-rules list --format=json | grep allow-9090 | grep name > /dev/null && echo $?` == 0 ]; then
 echo "===Rule exixsts==="
 else
-gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
+gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
 fi
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update'
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update' && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager && \
 cd ~ && git clone https://github.com/maratospanv/test.git && \
-if [ ! -e "alert.rules.yml" ]; then
-    touch "alert.rules.yml"
-fi
+if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
+    sudo touch /etc/prometheus/alert.rules.yml
+fi 
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
   - job_name: mon-server
