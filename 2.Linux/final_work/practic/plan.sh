@@ -21,7 +21,7 @@ if [ ! -d "~/vpnconf" ]; then
   rm -rf ~/vpnconf
   mkdir ~/vpnconf
 fi
-gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y easy-rsa git prometheus-node-exporter expect-dev expect && \
+gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install easy-rsa git prometheus-node-exporter expect-dev expect && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -64,7 +64,7 @@ echo "===Rule exixsts==="
 else
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
 fi
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get install -y easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect && \
 #sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g'  && \
 #sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config  && \
 #sudo systemctl restart sshd.service && \
@@ -129,8 +129,8 @@ echo "===Rule exixsts==="
 else
 gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
 fi
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt update' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt-get install -y git prometheus prometheus-alertmanager && \
+#gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update' && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo apt -qq update && sudo apt-get -qq -y install git prometheus prometheus-alertmanager && \
 cd ~ && git clone https://github.com/maratospanv/test.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
@@ -181,11 +181,12 @@ groups:
           description: The Disk utilization on host {{ $labels.instance }} has exceeded 85% for 5 minutes.
 EOF
 sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- "sudo sed -i '/'rule_files:'/a\  - "alert.rules.yml"' /etc/prometheus/prometheus.yml && sudo systemctl restart prometheus prometheus-alertmanager'" && \
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- "sudo sed -i '/'rule_files:'/a\  - "alert.rules.yml"' /etc/prometheus/prometheus.yml && sudo systemctl restart prometheus prometheus-alertmanager" && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ && \
 gcloud compute scp ~/gcinstance.txt vpn-server:~/ && \
 gcloud compute scp ~/gcinstance.txt mon-server:~/ && \
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
-gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts'
+gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' && \
+gcloud compute instances list
