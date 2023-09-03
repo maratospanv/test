@@ -60,7 +60,7 @@ echo $capass > ca.txt && \
 echo && \
 echo -e "\033[34m=========Build CA Certificate=========\033[0m" && \
 echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null && \
-mkdir ~/backup && echo "*/10 * * * 1 sudo tar -czf ~/backup/pkiserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki" | crontab -' && \
+mkdir ~/backup && echo '*/10 * * * * sudo tar -czf ~/backup/pkiserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki | crontab -'' && \
 rm -f $confdir/* && \
 gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
@@ -124,7 +124,7 @@ gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{prin
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs 1>/dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Configure VPN Server=========\033[0m && \
 bash /home/`whoami`/test/2.Linux/final_work/vpn.sh && \
-mkdir ~/backup && echo "*/10 * * * 1 sudo tar -czf ~/backup/vpnserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki ~/client-configs ~/certs /etc/openvpn/server" | crontab -' && \
+mkdir ~/backup && echo '*/10 * * * * sudo tar -czf ~/backup/vpnserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki ~/client-configs ~/certs /etc/openvpn/server' | crontab -' && \
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot'
 sleep 5
 gcloud compute instances reset vpn-server && \
