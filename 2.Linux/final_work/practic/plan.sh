@@ -111,7 +111,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs > /dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo =========Configure VPN Server========= && \
-bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null'
+bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null' && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot' 2>/dev/null && \
 
 
