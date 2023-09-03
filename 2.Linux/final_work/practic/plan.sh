@@ -123,7 +123,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir 1>/dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs 1>/dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Configure VPN Server=========\033[0m && \
-bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null && \
+bash /home/`whoami`/test/2.Linux/final_work/vpn.sh && \
 mkdir ~/backup && echo "*/10 * * * 1 sudo tar -czf ~/backup/vpnserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki ~/client-configs ~/certs /etc/openvpn/server" | crontab -' && \
 #gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot'
 sleep 5

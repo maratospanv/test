@@ -1,8 +1,8 @@
 #!/bin/bash
 oldiface=eth0
 iface=`ip a | grep '2: ' | awk '{print $2}' | sed 's/://g'`
-sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf &> /dev/null && sudo sysctl -p &> /dev/null && \ 
-sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw &> /dev/null && \ 
+sudo sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g" /etc/sysctl.conf &> /dev/null && sudo sysctl -p &> /dev/null && \ 
+sudo sed -i "s/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g" /etc/default/ufw &> /dev/null && \ 
 sudo cp ~/test/2.Linux/final_work/before.rules /etc/ufw/before.rules && \
 sudo ufw --force enable && sudo ufw allow 1194/udp && sudo ufw allow OpenSSH && sudo ufw allow 9100 && \
 mkdir -p ~/client-configs/{files,keys} && \
