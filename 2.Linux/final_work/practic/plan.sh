@@ -1,29 +1,24 @@
 #!/bin/bash
 confdir=~/vpnconf
-BLUE='\033[0;34m'
-WHITE='\033[0;37m' 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
 if [ ! -d $confdir ]; then
   rm -rf $confdir
   mkdir $confdir
-fi && \
+fi
 
 if [ `gcloud compute firewall-rules list --format=json | grep allow-1194 | grep name > /dev/null && echo $?` == 0 ]; then
-echo "===Rule allow-1194 exixsts==="
+echo -e "\033[32m===Rule allow-1194 exixsts===\033[0m"
 else
 gcloud compute firewall-rules create allow-1194 --action=ALLOW --rules=udp:1194 --direction=INGRESS
-fi && \
+fi
 
 if [ `gcloud compute firewall-rules list --format=json | grep allow-9090 | grep name > /dev/null && echo $?` == 0 ]; then
-echo "===Rule allow-9090 exixsts==="
+echo -e "\033[32m===Rule allow-9090 exixsts===\033[0m"
 else
 gcloud compute firewall-rules create allow-9090 --action=ALLOW --rules=tcp:9090 --direction=INGRESS
-fi && \
+fi
 echo -e "\n" && \
 
 echo -e "\033[32m=========Create PKI Server=========\033[0m" && \
-echo && \
 gcloud config set project avid-glass-396110 && \
 gcloud compute instances create pki-server \
     --project=avid-glass-396110 \
@@ -39,10 +34,10 @@ gcloud compute instances create pki-server \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
     --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any 1> /dev/null && \
+    --reservation-affinity=any && \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
-sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install easy-rsa git prometheus-node-exporter expect-dev expect > apt.txt && \
+sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa git prometheus-node-exporter expect-dev expect > apt.txt && \
 echo && \
 echo -e "\033[34m=========Configure CA Server=========\033[0m" && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
@@ -59,8 +54,7 @@ capass=`date +%s | sha256sum | base64 | head -c 32 ; echo` && \
 echo $capass > ca.txt && \
 echo && \
 echo -e "\033[34m=========Build CA Certificate=========\033[0m" && \
-echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null && \
-mkdir ~/backup && echo '*/10 * * * * sudo tar -czf ~/backup/pkiserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki | crontab -'' && \
+echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null' && \
 rm -f $confdir/* && \
 gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
@@ -82,12 +76,12 @@ gcloud compute instances create vpn-server \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
     --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any 1> /dev/null && \
+    --reservation-affinity=any && \
 sleep 30
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
-sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect > apt.txt && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo "\033[34m=========Update/Install packages=========\033[0m" && \
+sudo apt -qq update 1>/dev/null && sudo apt-get-y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect > apt.txt && \
 echo && \
-echo -e "\033[34m=========Create VPN Server Certs=========\033[0m"
+echo -e "\033[34m=========Create VPN Server Certs=========\033[0m" && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
 sudo chown `whoami` ~/easy-rsa/* && chmod 700 ~/easy-rsa/* && \
 cd ~/easy-rsa && \
@@ -123,9 +117,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir 1>/dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs 1>/dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Configure VPN Server=========\033[0m && \
-bash /home/`whoami`/test/2.Linux/final_work/vpn.sh && \
-mkdir ~/backup && echo '*/10 * * * * sudo tar -czf ~/backup/vpnserver-$(date +%Y-%m-%d-%M-%H).tar.gz ~/easy-rsa/pki ~/client-configs ~/certs /etc/openvpn/server' | crontab -' && \
-#gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo reboot'
+bash /home/`whoami`/test/2.Linux/final_work/vpn.sh' && \
 sleep 5
 gcloud compute instances reset vpn-server && \
 
@@ -147,7 +139,7 @@ gcloud compute instances create mon-server \
     --shielded-vtpm \
     --shielded-integrity-monitoring \
     --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any 1> /dev/null && \
+    --reservation-affinity=any && \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
 sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install git prometheus prometheus-alertmanager > apt.txt && \
