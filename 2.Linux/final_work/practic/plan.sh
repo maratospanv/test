@@ -146,7 +146,22 @@ sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install git prometheus pr
 cd ~ && git clone -q https://github.com/maratospanv/test.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
-fi 
+fi
+sudo sed -i 's/ARGS=""/ARGS="--collector.systemd"/' /etc/default/prometheus-node-exporter && \
+sudo chmod 777 /etc/prometheus/alertmanager.yml && \
+sudo cat << EOF >> /etc/prometheus/alertmanager.yml
+
+- name: 'mail-ru'
+  email_configs:
+  - to: 'ospanov_m86@mail.ru'
+    from: 'ospanov_m86@mail.ru'
+    smarthost: smtp.mail.ru:587
+    auth_username: "ospanov_m86@mail.ru"
+    auth_identity: "ospanov_m86@mail.ru"
+    auth_password: "aFSDTMEwjiezqMAAyQNg"
+    send_resolved: true
+EOF
+sudo sed -i 's/receiver: team-X-mails/receiver: mail-ru/' /etc/prometheus/alertmanager.yml && \
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
   - job_name: mon-server
@@ -157,7 +172,7 @@ sudo cat << EOF >> /etc/prometheus/prometheus.yml
     static_configs:
       - targets: ['pki-server:9100']
 
-  - job_name: vpn-serer
+  - job_name: vpn-server
     static_configs:
       - targets: ['vpn-server:9100']
 EOF
@@ -191,8 +206,17 @@ groups:
         annotations:
           summary: High Disk utilization on host {{ $labels.instance }}
           description: The Disk utilization on host {{ $labels.instance }} has exceeded 85% for 5 minutes.
+      
+      - alert: OpenVPN Server state
+        expr: node_systemd_unit_state{instance="vpn-server:9100",job="vpn-server",name="openvpn-server@server.service",state="active"} != 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: OpenVPN Server state down {{ $labels.instance }}
+          description: TOpenVPN Server state down {{ $labels.instance }} for 5 minutes.
 EOF
-sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml' && \
+sudo chmod 644 /etc/prometheus/prometheus.yml && sudo chmod 644 /etc/prometheus/alert.rules.yml && sudo chmod 644 /etc/prometheus/alertmanager.yml' && \
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- "sudo sed -i '/'rule_files:'/a\  - "alert.rules.yml"' /etc/prometheus/prometheus.yml && sudo systemctl restart prometheus prometheus-alertmanager" && \
 gcloud compute instances list | grep -e pki-server -e vpn-server -e mon-server | awk {'print $4,$1'} > ~/gcinstance.txt  && \
 gcloud compute scp ~/gcinstance.txt pki-server:~/ > /dev/null && \
