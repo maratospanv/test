@@ -9,7 +9,7 @@ sudo echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 sudo apt-get update && sudo apt-get install google-cloud-cli -y
 #gcloud init --console-only --account=maratospanv@gmail.com  --project=avid-glass-396110
-echo "Start --gcloud init-- command and try again"
+echo -e "\033[31mStart --gcloud init-- command and try again\033[0m Read from https://cloud.google.com/sdk/docs/install#deb" 
 break
 else
 echo -e "\033[32m=========gcloud utilites installed=========\033[0m"
@@ -71,6 +71,7 @@ echo $capass > ca.txt && \
 echo && \
 echo -e "\033[34m=========Build CA Certificate=========\033[0m" && \
 echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null && \
+echo -e "\n"
 echo -e "\033[34m=========Configure Backup=========\033[0m" && \
 sudo mkdir /backup && sudo chmod -R 644 /backup && \
 sudo touch /etc/systemd/system/backup.service && \
@@ -78,6 +79,10 @@ sudo touch /etc/systemd/system/backup.timer && \
 sudo chmod 777 /etc/systemd/system/backup.service && \
 sudo chmod 777 /etc/systemd/system/backup.timer && \
 sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
+sudo "#!/bin/bash" > /backup/backup.sh && \
+sudo echo "tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
+sudo chmod -R 777 /backup && \
+sudo chmod +x /backup/backup.sh && \
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
 Description=Backup service
@@ -85,7 +90,7 @@ Description=Backup service
 [Service]
 Type=oneshot
 PIDFile=/run/backup.pid
-ExecStart=tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;
+ExecStart=bash -c '/backup/backup.sh'
 
 [Install]
 WantedBy=multi-user.target
@@ -102,7 +107,8 @@ EOF
 sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload && \
-sudo systemctl enable backup.timer' && \
+sudo systemctl enable backup.timer
+sudo chmod -R 644 /backup' && \
 rm -f $confdir/* && \
 gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
@@ -159,6 +165,7 @@ capassvpn=`cat ~/easy-rsa/ca.txt` && \
     send "$capassvpn\n"
     expect eof
 EOF
+echo -e "\n"
 echo -e "\033[34m=========Configure Backup=========\033[0m" && \
 sudo mkdir /backup && sudo chmod -R 644 /backup && \
 sudo touch /etc/systemd/system/backup.service && \
@@ -166,6 +173,10 @@ sudo touch /etc/systemd/system/backup.timer && \
 sudo chmod 777 /etc/systemd/system/backup.service && \
 sudo chmod 777 /etc/systemd/system/backup.timer && \
 sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
+sudo "#!/bin/bash" > /backup/backup.sh && \
+sudo echo "tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
+sudo chmod -R 777 /backup && \
+sudo chmod +x /backup/backup.sh && \
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
 Description=Backup service
@@ -173,7 +184,7 @@ Description=Backup service
 [Service]
 Type=oneshot
 PIDFile=/run/backup.pid
-ExecStart=tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;
+ExecStart=bash -c '/backup/backup.sh'
 
 [Install]
 WantedBy=multi-user.target
@@ -190,7 +201,8 @@ EOF
 sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload && \
-sudo systemctl enable backup.timer' && \
+sudo systemctl enable backup.timer
+sudo chmod -R 644 /backup' && \
 gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt $confdir && \
 gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt $confdir && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key $confdir && \
@@ -228,6 +240,7 @@ sudo timedatectl set-timezone "Asia/Almaty" && \
 cd ~ && git clone -q https://github.com/maratospanv/test.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
+    sudo chmod 777 /etc/prometheus/alert.rules.yml
 fi
 sudo sed -i 's/ARGS=""/ARGS="--collector.systemd"/' /etc/default/prometheus-node-exporter && \
 sudo chmod 777 /etc/prometheus/alertmanager.yml && \
