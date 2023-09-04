@@ -52,7 +52,7 @@ gcloud compute instances create pki-server \
     --reservation-affinity=any && \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
-sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa git prometheus-node-exporter expect-dev expect > apt.txt && \
+sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa git prometheus-node-exporter expect-dev expect rclone > apt.txt && \
 sudo timedatectl set-timezone "Asia/Almaty" && \
 echo && \
 echo -e "\033[34m=========Configure CA Server=========\033[0m" && \
@@ -108,7 +108,13 @@ sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload && \
 sudo systemctl enable backup.timer && \
-sudo chmod -R 755 /backup' && \
+sudo chmod -R 755 /backup && \
+cat << EOF >> ~/.config/rclone/rclone.conf
+[mailru]
+type = mailru
+user = ospanov_m86@mail.ru
+pass = NY8-_JWmFlL11vWyxCq5Qzjb_DV5PJo0dwdH5kYrjrBTPTXe
+EOF' && \
 rm -f $confdir/* && \
 gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
@@ -133,7 +139,7 @@ gcloud compute instances create vpn-server \
     --reservation-affinity=any && \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
-sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect > apt.txt && \
+sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect rclone > apt.txt && \
 sudo timedatectl set-timezone "Asia/Almaty" && \
 echo && \
 echo -e "\033[34m=========Create VPN Server Certs=========\033[0m" && \
@@ -202,7 +208,13 @@ sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload && \
 sudo systemctl enable backup.timer && \
-sudo chmod -R 755 /backup' && \
+sudo chmod -R 755 /backup && \
+cat << EOF >> ~/.config/rclone/rclone.conf
+[mailru]
+type = mailru
+user = ospanov_m86@mail.ru
+pass = NY8-_JWmFlL11vWyxCq5Qzjb_DV5PJo0dwdH5kYrjrBTPTXe
+EOF' && \
 gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt $confdir && \
 gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt $confdir && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key $confdir && \
@@ -259,6 +271,7 @@ EOF
 sudo sed -i 's/receiver: team-X-mails/receiver: mail-ru/' /etc/prometheus/alertmanager.yml && \
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
+
   - job_name: mon-server
     static_configs:
       - targets: ['mon-server:9100']
