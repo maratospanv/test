@@ -1,5 +1,20 @@
 #!/bin/bash
 confdir=~/vpnconf
+echo -e "\033[34m=========Check gcloud utilites=========\033[0m"
+if [ $(which gcloud | echo $?) -ne 0 ]
+then
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates gnupg curl sudo
+sudo echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+sudo apt-get update && sudo apt-get install google-cloud-cli -y
+#gcloud init --console-only --account=maratospanv@gmail.com  --project=avid-glass-396110
+echo "Start --gcloud init-- command and try again"
+break
+else
+echo -e "\033[34m=========gcloud utilites installed=========\033[0m"
+fi
+
 if [ ! -d $confdir ]; then
   rm -rf $confdir
   mkdir $confdir
