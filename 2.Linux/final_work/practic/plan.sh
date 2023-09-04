@@ -38,6 +38,7 @@ gcloud compute instances create pki-server \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
 sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa git prometheus-node-exporter expect-dev expect > apt.txt && \
+sudo timedatectl set-timezone "Asia/Almaty" && \
 echo && \
 echo -e "\033[34m=========Configure CA Server=========\033[0m" && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
@@ -54,7 +55,39 @@ capass=`date +%s | sha256sum | base64 | head -c 32 ; echo` && \
 echo $capass > ca.txt && \
 echo && \
 echo -e "\033[34m=========Build CA Certificate=========\033[0m" && \
-echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null' && \
+echo -e "$capass\n$capass\n" | ./easyrsa build-ca 1>/dev/null && \
+echo -e "\033[34m=========Configure Backup=========\033[0m" && \
+sudo mkdir /backup && sudo chmod -R 644 /backup && \
+sudo touch /etc/systemd/system/backup.service && \
+sudo touch /etc/systemd/system/backup.timer && \
+sudo chmod 777 /etc/systemd/system/backup.service && \
+sudo chmod 777 /etc/systemd/system/backup.timer && \
+sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
+sudo cat << EOF >> /etc/systemd/system/backup.service
+[Unit]
+Description=Backup service
+
+[Service]
+Type=oneshot
+PIDFile=/run/backup.pid
+ExecStart=tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo cat << EOF >> /etc/systemd/system/backup.timer
+[Unit]
+Description=Backup timer
+
+[Timer]
+OnCalendar=Mon..Sun *-*-* 00:00:*
+Unit=backup.service
+EOF
+sudo chmod 644 /etc/systemd/system/backup.service && \
+sudo chmod 644 /etc/systemd/system/backup.timer && \
+sudo systemctl daemon-reload && \
+sudo systemctl enable backup.timer' && \
 rm -f $confdir/* && \
 gcloud compute scp pki-server:~/easy-rsa/ca.txt $confdir 1>/dev/null && \
 
@@ -80,6 +113,7 @@ gcloud compute instances create vpn-server \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
 sudo apt -qq update 1>/dev/null && sudo apt-get -y install easy-rsa openvpn git prometheus-node-exporter expect-dev expect > apt.txt && \
+sudo timedatectl set-timezone "Asia/Almaty" && \
 echo && \
 echo -e "\033[34m=========Create VPN Server Certs=========\033[0m" && \
 mkdir ~/easy-rsa && sudo ln -s /usr/share/easy-rsa/* ~/easy-rsa/ && \
@@ -109,7 +143,39 @@ capassvpn=`cat ~/easy-rsa/ca.txt` && \
     expect "Enter*"
     send "$capassvpn\n"
     expect eof
-EOF'
+EOF
+echo -e "\033[34m=========Configure Backup=========\033[0m" && \
+sudo mkdir /backup && sudo chmod -R 644 /backup && \
+sudo touch /etc/systemd/system/backup.service && \
+sudo touch /etc/systemd/system/backup.timer && \
+sudo chmod 777 /etc/systemd/system/backup.service && \
+sudo chmod 777 /etc/systemd/system/backup.timer && \
+sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
+sudo cat << EOF >> /etc/systemd/system/backup.service
+[Unit]
+Description=Backup service
+
+[Service]
+Type=oneshot
+PIDFile=/run/backup.pid
+ExecStart=tar -czf /backup/vpnserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis /etc/openvpn/server/ && find /backup -name "vpnserver-bkp*" -mtime +13 -exec rm -f {} \;
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo cat << EOF >> /etc/systemd/system/backup.timer
+[Unit]
+Description=Backup timer
+
+[Timer]
+OnCalendar=Mon..Sun *-*-* 00:00:*
+Unit=backup.service
+EOF
+sudo chmod 644 /etc/systemd/system/backup.service && \
+sudo chmod 644 /etc/systemd/system/backup.timer && \
+sudo systemctl daemon-reload && \
+sudo systemctl enable backup.timer' && \
 gcloud compute scp pki-server:~/easy-rsa/pki/issued/vpn.crt $confdir && \
 gcloud compute scp pki-server:~/easy-rsa/pki/ca.crt $confdir && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/private/vpn.key $confdir && \
@@ -143,6 +209,7 @@ gcloud compute instances create mon-server \
 sleep 30
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
 sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install git prometheus prometheus-alertmanager > apt.txt && \
+sudo timedatectl set-timezone "Asia/Almaty" && \
 cd ~ && git clone -q https://github.com/maratospanv/test.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
