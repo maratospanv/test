@@ -12,14 +12,14 @@ sudo apt-get update && sudo apt-get install google-cloud-cli -y
 echo "Start --gcloud init-- command and try again"
 break
 else
-echo -e "\033[34m=========gcloud utilites installed=========\033[0m"
+echo -e "\033[32m=========gcloud utilites installed=========\033[0m"
 fi
 
 if [ ! -d $confdir ]; then
   rm -rf $confdir
   mkdir $confdir
 fi
-
+echo -e "\033[34m=========Check firewall rules=========\033[0m"
 if [ `gcloud compute firewall-rules list --format=json | grep allow-1194 | grep name > /dev/null && echo $?` == 0 ]; then
 echo -e "\033[32m===Rule allow-1194 exixsts===\033[0m"
 else
