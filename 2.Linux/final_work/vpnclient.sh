@@ -1,5 +1,5 @@
 #!/bin/bash
-client=client.sh
+client=tempclient.sh
 rm -f $client > /dev/null
 touch $client
 echo '#!/bin/bash
