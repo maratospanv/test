@@ -1,4 +1,5 @@
 #!/bin/bash
+if [ -n "$1" ]; then
 client=tempclient.sh
 rm -f $client > /dev/null
 touch $client
@@ -29,3 +30,8 @@ gcloud compute scp vpn-server:~/client-configs/files/client1.ovpn ~/vpnconf' > $
 sed -i "s/client1/$1/g" $client
 bash $client && \
 rm -f $client
+else
+echo -e "\n"
+echo -e "\033[31mClient name parameter not specified\033[0m"
+echo -e "\n"
+fi

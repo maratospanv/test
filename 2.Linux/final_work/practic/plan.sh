@@ -1,4 +1,5 @@
 #!/bin/bash
+starttime=`echo "Start time $(date +%H:%M) $(date +%d-%m-%Y)"`
 confdir=~/vpnconf
 echo -e "\033[34m=========Check gcloud utilites=========\033[0m"
 if [ $(which gcloud | echo $?) -ne 0 ]
@@ -339,3 +340,5 @@ gcloud compute ssh `gcloud compute instances list | grep pki-server | awk '{prin
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' > /dev/null && \
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'sudo chmod 666 /etc/hosts && sudo cat ~/gcinstance.txt >> /etc/hosts && sudo chmod 644 /etc/hosts' > /dev/null && \
 gcloud compute instances list
+echo $starttime
+echo "End time $(date +%H:%M) $(date +%d-%m-%Y)"
