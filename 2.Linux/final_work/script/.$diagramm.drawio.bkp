@@ -1,10 +1,10 @@
-<mxfile host="Electron" modified="2023-09-05T16:01:00.362Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="lms6bCkZJQpsSh7ZMW65" version="21.6.8" type="device">
+<mxfile host="Electron" modified="2023-09-05T16:00:05.015Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="zLlyxvGVHDRrgTUcngW_" version="21.6.8" type="device">
   <diagram name="Страница — 1" id="hew44b3i5Q5aKTKvvJgn">
     <mxGraphModel dx="1424" dy="929" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="uT4GWdOJRzV0obSYSjK9-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uT4GWdOJRzV0obSYSjK9-20" target="uT4GWdOJRzV0obSYSjK9-30">
+        <mxCell id="uT4GWdOJRzV0obSYSjK9-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="uT4GWdOJRzV0obSYSjK9-30">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="20" y="120" as="sourcePoint" />
           </mxGeometry>
