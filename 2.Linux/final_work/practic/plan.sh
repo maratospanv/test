@@ -108,8 +108,8 @@ Unit=backup.service
 EOF
 sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
-sudo systemctl daemon-reload && \
-sudo systemctl enable backup.timer && \
+sudo systemctl daemon-reload > /dev/null && \
+sudo systemctl enable backup.timer --now > /dev/null && \
 sudo chmod -R 755 /backup && \
 cat << EOF >> ~/.config/rclone/rclone.conf
 [mailru]
@@ -209,8 +209,8 @@ Unit=backup.service
 EOF
 sudo chmod 644 /etc/systemd/system/backup.service && \
 sudo chmod 644 /etc/systemd/system/backup.timer && \
-sudo systemctl daemon-reload && \
-sudo systemctl enable backup.timer && \
+sudo systemctl daemon-reload > /dev/null && \
+sudo systemctl enable backup.timer --now > /dev/null && \
 sudo chmod -R 755 /backup && \
 cat << EOF >> ~/.config/rclone/rclone.conf
 [mailru]
@@ -225,7 +225,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 echo -e "\033[34m=========Configure VPN Server=========\033[0m" && \
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh' && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null' && \
 sleep 5
 gcloud compute instances reset vpn-server && \
 
