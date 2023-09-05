@@ -272,7 +272,7 @@ sudo cat << EOF >> /etc/prometheus/alertmanager.yml
     send_resolved: true
 EOF
 
-sudo sed -i 's/receiver: team-X-mails/receiver: mail-ru/' /etc/prometheus/alertmanager.yml && \
+sudo sed -i "s/receiver: team-X-mails/receiver: mail-ru/" /etc/prometheus/alertmanager.yml && \
 sudo chmod 777 /etc/prometheus/prometheus.yml && sudo chmod 777 /etc/prometheus/alert.rules.yml && \
 sudo cat << EOF >> /etc/prometheus/prometheus.yml
 
