@@ -82,7 +82,7 @@ sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
 sudo touch /backup/backup.sh && sudo chmod -R 777 /backup && \
 sudo echo "#!/bin/bash" > /backup/backup.sh && \
 sudo echo "sudo tar -czf /backup/pkiserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis/* && find /backup -name "pkiserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
-sudo echo "rclone sync -P /backup/ mailru:/Backup/" >> /backup/backup.sh && \
+sudo echo "rclone sync -P /backup mailru:/Backup" >> /backup/backup.sh && \
 
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
@@ -183,7 +183,7 @@ sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
 sudo touch /backup/backup.sh && sudo chmod -R 777 /backup && \
 sudo echo "#!/bin/bash" > /backup/backup.sh && \
 sudo echo "sudo tar -czf /backup/pkiserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis/* && find /backup -name "pkiserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
-sudo echo "rclone sync -P /backup/ mailru:/Backup/" >> /backup/backup.sh && \
+sudo echo "rclone sync -P /backup mailru:/Backup" >> /backup/backup.sh && \
 
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
