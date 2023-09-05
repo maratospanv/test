@@ -27,4 +27,5 @@ cp ~/easy-rsa/pki/private/client1.key ~/client-configs/keys/ && \
 cd ~/client-configs/ && ./make_config.sh client1'\''
 gcloud compute scp vpn-server:~/client-configs/files/client1.ovpn ~/vpnconf' > $client
 sed -i "s/client1/$1/g" $client
+bash $client && \
 rm -f $client
