@@ -1,6 +1,6 @@
 #!/bin/bash
 starttime=`echo "Start time $(date +%H:%M) $(date +%d-%m-%Y)"`
-confdir=~/vpnconf
+confdir=./vpnconf
 echo -e "\033[34m=========Check gcloud utilites=========\033[0m"
 if [ $(which gcloud | echo $?) -ne 0 ]
 then
@@ -83,7 +83,7 @@ sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
 sudo touch /backup/backup.sh && sudo chmod -R 777 /backup && \
 sudo echo "#!/bin/bash" > /backup/backup.sh && \
 sudo echo "sudo tar -czf /backup/pkiserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis/* && find /backup -name "pkiserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
-sudo echo "rclone sync -P /backup mailru:/Backup" >> /backup/backup.sh && \
+sudo echo "rclone sync -P /backup cloud:/Backup" >> /backup/backup.sh && \
 
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
@@ -111,9 +111,10 @@ sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload > /dev/null && \
 sudo systemctl enable backup.timer --now > /dev/null && \
 sudo chmod -R 755 /backup && \
+touch ~/.config/rclone/rclone.conf && \
 cat << EOF >> ~/.config/rclone/rclone.conf
-[mailru]
-type = mailru
+[cloud]
+type = mail.ru
 user = ospanov_m86@mail.ru
 pass = NY8-_JWmFlL11vWyxCq5Qzjb_DV5PJo0dwdH5kYrjrBTPTXe
 EOF'
@@ -156,7 +157,7 @@ cd /home/`whoami`/easy-rsa/ && \
 cd /home/`whoami`/easy-rsa/ && \
 echo -ne "\n" | ./easyrsa gen-req vpn nopass 1>/dev/null && \
 openvpn --genkey --secret ta.key 1>/dev/null && \
-cd ~ && git clone -q https://github.com/maratospanv/test.git'
+cd ~ && git clone -q https://gitlab.skillbox.ru/marat_ospanov/devops-engineer-basics.git'
 gcloud compute scp $confdir/ca.txt vpn-server:~/easy-rsa/ && \
 gcloud compute scp vpn-server:~/easy-rsa/pki/reqs/vpn.req $confdir && \
 gcloud compute scp $confdir/vpn.req pki-server:~/easy-rsa/ && \
@@ -173,8 +174,8 @@ capassvpn=`cat ~/easy-rsa/ca.txt` && \
     send "$capassvpn\n"
     expect eof
 EOF
-echo -e "\n"
-echo -e "\033[34m=========Configure Backup=========\033[0m" && \
+echo -e "\n"'
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Configure Backup=========\033[0m" && \
 sudo mkdir /backup && sudo chmod -R 777 /backup && \
 sudo touch /etc/systemd/system/backup.service && \
 sudo touch /etc/systemd/system/backup.timer && \
@@ -184,7 +185,7 @@ sudo ln -s ~/easy-rsa/pki /usr/share/easy-rsa/pkis && \
 sudo touch /backup/backup.sh && sudo chmod -R 777 /backup && \
 sudo echo "#!/bin/bash" > /backup/backup.sh && \
 sudo echo "sudo tar -czf /backup/pkiserver-bkp-\$(date +%d-%m-%Y-%H-%M).tar.gz /usr/share/easy-rsa/pkis/* && find /backup -name "pkiserver-bkp*" -mtime +13 -exec rm -f {} \;" >> /backup/backup.sh && \
-sudo echo "rclone sync -P /backup mailru:/Backup" >> /backup/backup.sh && \
+sudo echo "rclone sync -P /backup cloud:/Backup" >> /backup/backup.sh && \
 
 sudo cat << EOF >> /etc/systemd/system/backup.service
 [Unit]
@@ -212,9 +213,10 @@ sudo chmod 644 /etc/systemd/system/backup.timer && \
 sudo systemctl daemon-reload > /dev/null && \
 sudo systemctl enable backup.timer --now > /dev/null && \
 sudo chmod -R 755 /backup && \
+touch ~/.config/rclone/rclone.conf && \
 cat << EOF >> ~/.config/rclone/rclone.conf
-[mailru]
-type = mailru
+[cloud]
+type = mail.ru
 user = ospanov_m86@mail.ru
 pass = NY8-_JWmFlL11vWyxCq5Qzjb_DV5PJo0dwdH5kYrjrBTPTXe
 EOF'
@@ -225,7 +227,7 @@ gcloud compute scp vpn-server:~/easy-rsa/ta.key $confdir && \
 gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'cd ~ && mkdir certs' > /dev/null && \
 gcloud compute scp $confdir/{ca.crt,vpn.crt,vpn.key,ta.key} vpn-server:~/certs && \
 echo -e "\033[34m=========Configure VPN Server=========\033[0m" && \
-gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/test/2.Linux/final_work/vpn.sh > /dev/null' && \
+gcloud compute ssh `gcloud compute instances list | grep vpn-server | awk '{print $1}'` -- 'bash /home/`whoami`/devops-engineer-basics/vpn.sh > /dev/null' && \
 sleep 5
 gcloud compute instances reset vpn-server && \
 
@@ -252,7 +254,7 @@ sleep 30
 gcloud compute ssh `gcloud compute instances list | grep mon-server | awk '{print $1}'` -- 'echo -e "\033[34m=========Update/Install packages=========\033[0m" && \
 sudo apt -qq update 1>/dev/null && sudo apt-get -qq -y install git prometheus prometheus-alertmanager > apt.txt && \
 sudo timedatectl set-timezone "Asia/Almaty" && \
-cd ~ && git clone -q https://github.com/maratospanv/test.git && \
+cd ~ && git clone -q https://gitlab.skillbox.ru/marat_ospanov/devops-engineer-basics.git && \
 if [ ! -e "/etc/prometheus/alert.rules.yml" ]; then
     sudo touch /etc/prometheus/alert.rules.yml
     sudo chmod 777 /etc/prometheus/alert.rules.yml
