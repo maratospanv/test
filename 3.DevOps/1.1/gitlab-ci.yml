@@ -1,0 +1,20 @@
+stages:
+  - test
+  - build
+
+blog test:
+  stage: test
+  script:
+    - pip3 install Django
+    - python3 manage.py test
+
+blog build:
+  stage: build
+  script:
+    - pip3 install Django
+    - pip3 install -r requirements.txt
+    - python3 manage.py migrate blog
+    - python3 manage.py runserver &
+    - if [ $(curl --silent --head http://127.0.0.1:8000/ | awk '/^HTTP/{print $2}') -eq '200' ]; then echo 'Succsess'; else echo 'Failed'; fi
+    - sleep 5
+    - sudo -u gitlab-runner kill -9 $(sudo -u gitlab-runner ps -aux | grep runserver | awk 'NR==1,NR==2{print $2}')
